@@ -1,0 +1,9 @@
+[Nemo Action]
+Active=true
+Name=Вычислить хэш-суммы
+Comment=Вычислить хэш-суммы MD5 или SHAх
+Exec=<hash.sh %F>
+Icon-Name=system-run-symbolic
+Selection=notnone
+Extensions=nodirs
+Quote=double

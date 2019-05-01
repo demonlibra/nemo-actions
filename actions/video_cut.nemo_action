@@ -1,0 +1,49 @@
+[Nemo Action]
+
+Active=true
+
+# The name to show in the menu, locale supported with standard desktop spec.
+# **** REQUIRED ****
+Name=Вырезать фрагмент мультимедиа
+
+# Tool tip, locale supported (Appears in the status bar)
+Comment=Вырезать фрагмент мультимедиа
+
+# What to run.  Enclose in < > to run an executable that resides in the actions folder.
+# **** REQUIRED ****
+Exec=<video_cut.sh %F>
+
+Icon-Name=stock_cut
+
+# What type selection: [s]ingle, [m]ultiple, any, notnone, none (background click), or
+# a number representing how many files must be selected to display.
+# ****** REQUIRED *******
+Selection=s
+
+# What extensions to display on - this is an array, end with a semicolon
+# Single entry options, ending in a semicolon:
+#     "dir" for directory selection
+#     "none" for no extension.
+#     "nodirs" for any selection, but not including directories.
+#     "any" for any file type, including directories.
+# Individual specific extensions can be a semicolon-terminated list
+# Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
+# **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
+#Extensions=AppImage;
+
+# What mime-types to display on - this is an array, end with a semicolon
+# **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
+Mimetypes=video/*;
+
+
+# Quote type to use (if any) - enclose paths/urls with quotes.  Optional - defaults
+# to no quotes.  
+# Can be:  single, double, backtick
+Quote=double
+
+# Dependencies - program executables required for this action to work.  Nemo will
+# Search in the path for these program(s) and not display the action if any are missing.
+# You can also supply an absolute path to a file (i.e. /usr/lib/gvfs/gvfsd-archive) to check
+# instead of or in addition to an executable in the path.
+# This is an array, separate entries with semi-colon, and terminate with a semicolon.
+Dependencies=yad;mediainfo;

@@ -1,0 +1,10 @@
+[Nemo Action]
+Name=Изменить кодировку текстовых файлов
+Comment=Изменить кодировку текстовых файлов при помощи enconv
+Icon-Name=txt2
+Exec=<txt_convert_encoding.sh %F>
+Selection=notnone
+#Extensions=txt;
+Mimetypes=text/*;
+EscapeSpaces=true
+Dependencies=enca;

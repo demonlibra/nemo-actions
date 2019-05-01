@@ -1,0 +1,11 @@
+[Nemo Action]
+
+Active=false
+Name=Расшифровать файл gpg
+Comment=Расшифровать файл gpg
+Exec=gpg "%F"
+Icon-Name=gpg
+Selection=s
+Extensions=gpg;
+Quote=double
+EscapeSpaces=true
