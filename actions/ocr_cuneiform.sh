@@ -9,12 +9,7 @@ fullpathname=$@
 name=${fullpathname##*/}
 path=${fullpathname%/*}
 
-#Проверка установки пакета zenity
-if [ -z "`dpkg -l | grep zenity`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета zenity" -- bash -c "echo \"zenity не установлен\"; echo ; sudo apt install zenity; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
-fi
-
-AAA=`zenity --list --radiolist --title="Распознавание изображения" --text="Выберите язык" --column="Выбор" --column="Язык распознавания" --column="Описание" TRUE rus "Русский" FALSE eng "Английский" FALSE ruseng "Русский и Английский" --ok-label="Распознать" --cancel-label="Отмена" --width=400 --height=170`
+AAA=`zenity --list --radiolist --title="Распознавание изображения cuneiform" --text="Выберите язык" --column="Выбор" --column="Язык распознавания" --column="Описание" TRUE rus "Русский" FALSE eng "Английский" FALSE ruseng "Русский и Английский" --ok-label="Распознать" --cancel-label="Отмена" --width=400 --height=195`
 
 if [ $? = 0 ]
 	then
