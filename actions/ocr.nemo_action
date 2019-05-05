@@ -1,17 +1,17 @@
 [Nemo Action]
 
-Active=false
+Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Распознать текст tesseract
+Name=Распознать текст
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Распознать текст программой tesseract
-
+Comment=Распознать текст программами cuneiform или tesseract
+ 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=<ocr_tesseract.sh %F>
+Exec=<ocr.sh %F>
 
 # Icon name to use in the menu - must be a theme icon name
 Icon-Name=applications-font
@@ -40,4 +40,4 @@ Extensions=bmp;gif;ico;jpe;jpg;jpeg;png;ppm;tif;tiff;
 # Quote type to use (if any) - enclose paths/urls with quotes.  Optional - defaults
 # to no quotes.  
 # Can be:  single, double, backtick
-#Quote=double
+Quote=double

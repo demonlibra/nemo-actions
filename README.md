@@ -44,6 +44,7 @@
 |**image_rotate**|Повернуть изображения|
 |**iso_mount**|Монтировать образ ISO программой gnome-disk-image-mounter|
 |**ocr_cuneiform**|Распознать текст программой cuneiform|
+|**ocr**|Распознать текст программами cuneiform или tesseract|
 |**ocr_tesseract**|Распознать текст программой tesseract|
 |**pdf_compress**|Уменьшить размер файла PDF сжатием изображений |
 |**pdf_convert_to_image**|Преобразовать страницы PDF в изображения|
