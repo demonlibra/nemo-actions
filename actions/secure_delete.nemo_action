@@ -1,6 +1,6 @@
 [Nemo Action]
 
-Active=true
+Active=false
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****

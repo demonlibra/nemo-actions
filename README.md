@@ -12,10 +12,10 @@
 Сделайте файлы *.sh исполняемыми
 >chmod +x $HOME/.local/share/nemo/actions/*.sh
 
-*Некоторые действия выключены. Проверьте параметр в файле *.nemo_action*
+*Некоторые действия выключены. Проверьте параметр в файле .nemo_action*
 >Active=true
 
-*Описание структуры файлов *.nemo_action смотрите в файлах help и help_ru*
+*Описание структуры файлов .nemo_action смотрите в файлах help и help_ru*
 
 *Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:*
 >sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo secure-delete tesseract-ocr tesseract-ocr-rus unoconv yad
@@ -73,8 +73,9 @@
 |**wetransfer**|Загрузить на Wetransfer|
 |**xed_as_root**|Открыть текстовый файл в редакторе xed от имени root|
 ## Сценарии (scripts)
-|Файл|Описание|
-|---|---|
-|**Загрузить на firefoxsend**||
-|**Загрузить на transfersh**||
-|**Загрузить на wetransfer**||
+|Файл|
+|---|
+|**Безвозвратное удаление**|
+|**Загрузить на firefoxsend**|
+|**Загрузить на transfersh**|
+|**Загрузить на wetransfer**|

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#Проверка установки пакета secure-delete
+if [ -z "`dpkg -l | grep secure-delete`" ]
+	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета secure-delete" -- bash -c "echo \"secure-delete не установлен\"; echo ; sudo apt install secure-delete; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+fi
+
+FORM=`yad --borders=10 --title="secure-delete" --text="Безвозвратное удаление" --text-align=center --form --separator="," --item-separator="|" --field=:LBL --field="Быстро (no /dev/urandom, no synchronize mode):CHK" --field="Меньше проходов (2 прохода 0xff/random):CHK" --field="Ещё меньше проходов (1 проход random):CHK" --field="От имени root:CHK" "" TRUE TRUE TRUE FALSE`
+
+if [ $? = 0 ]
+	then
+		fast=$( echo $FORM | awk -F ',' '{print $2}')
+		if [ $fast = "TRUE" ]
+			then options="f"
+		fi
+
+		lessens=$( echo $FORM | awk -F ',' '{print $3}')
+
+		if [ $lessens = "TRUE" ]
+			then options=$options"l"
+		fi
+
+		lessens=$( echo $FORM | awk -F ',' '{print $4}')
+		if [ $lessens = "TRUE" ]
+			then options=$options"l"
+		fi
+
+		quoted_args="$(printf " %q" "${@}")"
+
+		root=$( echo $FORM | awk -F ',' '{print $5}')
+		if [ $root = "TRUE" ]
+			then gnome-terminal --geometry 90x20 --hide-menubar -t "Secure delete" -e "sudo srm -rv$options $quoted_args"
+			else gnome-terminal --geometry 90x20 --hide-menubar -t "Secure delete" -- bash -c "srm -rv$options $quoted_args; echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
+		fi
+
+		notify-send -t 10000 -i "gtk-ok" "Secure delete" "Операция завершена"
+fi
