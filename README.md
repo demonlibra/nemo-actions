@@ -1,26 +1,30 @@
-# Nemo Actions
+# Контекстное меню Nemo (Actions and Srcipts)
+# Действия и сценарии при нажатии правой кнопкой мыши
 
-Скопируйте файлы из каталога **actions** в архиве в **/home/имя_пользователя/.local/share/nemo/actions/**
+Скопируйте действия из каталога **actions** в **/home/имя_пользователя/.local/share/nemo/actions/**
 >cp *.sh $HOME/.local/share/nemo/actions/
 
 >cp *.nemo_action $HOME/.local/share/nemo/actions/
 
-Сделайте файлы xxx.sh исполняемыми
+Скопируйте сценарии из каталога **scripts** в **/home/имя_пользователя/.local/share/nemo/scripts/**
+>cp *.sh $HOME/.local/share/nemo/scripts/
+
+Сделайте файлы *.sh исполняемыми
 >chmod +x $HOME/.local/share/nemo/actions/*.sh
 
-*Некоторые сценарии выключены. Для работы сценария проверьте параметр в файле xxx.nemo_action*
+*Некоторые действия выключены. Проверьте параметр в файле *.nemo_action*
 >Active=true
 
-*Описание структуры файлов xxx.nemo_action смотрите в файлах help и help_ru*
+*Описание структуры файлов *.nemo_action смотрите в файлах help и help_ru*
 
-*Для работы сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:*
+*Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:*
 >sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo secure-delete tesseract-ocr tesseract-ocr-rus unoconv yad
 
-*В некоторых сценариях используются программы формирования диалогового окна yad, вывода уведомлений notify-send, записи данных в буфер обмена xclip. Для их установки выполните в терминале следующую команду:*
+*В некоторых действиях и сценариях используются программы формирования диалогового окна yad, вывода уведомлений notify-send, записи данных в буфер обмена xclip. Для их установки выполните в терминале следующую команду:*
 >sudo apt install yad libnotify-bin xclip
 
 
-## Описание сценариев
+## Действия (actions)
 |Файл|Описание|
 |---|---|
 |**appimage_run**|Скопировать в домашний каталог, сделать исполняемым и запустить пакет AppImage|
@@ -68,3 +72,9 @@
 |**video_process**|Изменить формат, bitrate, разрешение, кодек, поворот|
 |**wetransfer**|Загрузить на Wetransfer|
 |**xed_as_root**|Открыть текстовый файл в редакторе xed от имени root|
+## Сценарии (scripts)
+|Файл|Описание|
+|---|---|
+|**Загрузить на firefoxsend**||
+|**Загрузить на transfersh**||
+|**Загрузить на wetransfer**||
