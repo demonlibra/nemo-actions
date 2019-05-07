@@ -7,7 +7,7 @@ Active=true
 Name=Открыть в терминале
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Открыть терминал в выбранном каталоге
+Comment=Открыть терминал в выбранной папке
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
