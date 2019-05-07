@@ -4,17 +4,17 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Открыть в терминале
+Name=Открыть как root
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Открыть терминал в выбранном каталоге
+Comment=Открыть выбранный каталог от имени root
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=gnome-terminal --working-directory=%F
+Exec=<nemo_root.sh %F>
 
 # Icon name to use in the menu - must be a theme icon name
-Icon-Name=terminal
+Icon-Name=lock
 
 # What type selection: [s]ingle, [m]ultiple, any, notnone, none (background click), or
 # a number representing how many files must be selected to display.
