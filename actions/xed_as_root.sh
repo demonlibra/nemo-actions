@@ -1,1 +1,3 @@
-pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY xed $@
+#!/bin/bash
+
+pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY xed "$@"
