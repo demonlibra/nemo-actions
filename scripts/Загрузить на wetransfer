@@ -1,7 +1,7 @@
 #!/bin/bash
 
 first_element=$1														#Первый элементы переданный сценарию
-path=${first_element%/*}												#Путь к элементам
+path=$PWD																#Путь к элементам
 timestamp=`date +%Y-%m-%d_%H-%M`										#Имя будущего архива по умолчанию
 
 

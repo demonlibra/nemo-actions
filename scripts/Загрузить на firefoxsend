@@ -8,7 +8,7 @@
 #cp ffsend* ffsend; chmod +x ffsend; sudo mv ffsend /usr/bin/
 
 first_element=$1														#Первый элементы переданный сценарию
-path=${first_element%/*}												#Путь к элементам
+path=$PWD																#Путь к элементам
 timestamp=`date +%Y-%m-%d_%H-%M`										#Имя будущего архива по умолчанию
 
 numberelements=$#														#Количество элементов (путей к файлам и каталогам)

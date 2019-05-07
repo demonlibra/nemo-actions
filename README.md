@@ -1,30 +1,46 @@
-# Контекстное меню Nemo (Actions and Srcipts)
-# Действия и сценарии при нажатии правой кнопкой мыши
+# Контекстное меню Nemo
+### Действия (actions) и сценарии (srcipts) при нажатии правой кнопкой мыши
 
-Скопируйте действия из каталога **actions** в **/home/имя_пользователя/.local/share/nemo/actions/**
->cp *.sh $HOME/.local/share/nemo/actions/
+Для решения рутинных задач с файлами и каталогами в файловом менеджере Nemo присутствует возможность создавать *Действия (actions)* и *Сценарии (scripts)*.
 
->cp *.nemo_action $HOME/.local/share/nemo/actions/
+**Сценарии** отображаются при выборе любых файлов и/или каталогов. Сценарии можно группировать по вкладкам.  
+Файлы *Сценариев* хранятся в каталоге /home/имя_пользователя/.local/share/nemo/scripts/
 
-Скопируйте сценарии из каталога **scripts** в **/home/имя_пользователя/.local/share/nemo/scripts/**
->cp *.sh $HOME/.local/share/nemo/scripts/
+**Действия** удобно применять целенаправлено при выделении определенных объектов и имеют множество настроек.  
+Файлы *действий* хранятся в каталоге /home/имя_пользователя/.local/share/nemo/actions/  
+Настройки задаются в одноименных файлах с расширением .nemo_action (смотрите файлы help и help_ru)
 
-Сделайте файлы *.sh исполняемыми
->chmod +x $HOME/.local/share/nemo/actions/*.sh
+## Установка
+Скопируйте файлы в каталог **/home/имя_пользователя/.local/share/nemo/**
+```
+cp actions/*.sh $HOME/.local/share/nemo/actions/
+cp actions/*.nemo_action $HOME/.local/share/nemo/actions/
+cp scripts/* $HOME/.local/share/nemo/scripts/
+```
 
-*Некоторые действия выключены. Проверьте параметр в файле .nemo_action*
->Active=true
+Сделайте файлы исполняемыми
+```
+chmod +x $HOME/.local/share/nemo/actions/*.sh
+chmod +x $HOME/.local/share/nemo/scripts/*
+```
 
-*Описание структуры файлов .nemo_action смотрите в файлах help и help_ru*
+## Скрыть/показать действия (actions)
 
-*Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:*
->sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo secure-delete tesseract-ocr tesseract-ocr-rus unoconv yad
+*Некоторые действия скрыты. Проверьте параметр **Active** в файле .nemo_action*
+- Active=true - активно
+- Active=false - скрыто
 
-*В некоторых действиях и сценариях используются программы формирования диалогового окна yad, вывода уведомлений notify-send, записи данных в буфер обмена xclip. Для их установки выполните в терминале следующую команду:*
->sudo apt install yad libnotify-bin xclip
+*Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:*  
+`sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo secure-delete tesseract-ocr tesseract-ocr-rus unoconv yad`
+
+*В некоторых действиях и сценариях используются программы формирования диалогового окна yad, вывода уведомлений notify-send, записи данных в буфер обмена xclip. Для их установки выполните в терминале следующую команду:*  
+`sudo apt install yad libnotify-bin xclip`
 
 
 ## Действия (actions)
+
+/home/имя_пользователя/.local/share/nemo/actions
+
 |Файл|Описание|
 |---|---|
 |**appimage_run**|Скопировать в домашний каталог, сделать исполняемым и запустить пакет AppImage|
@@ -73,6 +89,9 @@
 |**wetransfer**|Загрузить на Wetransfer|
 |**xed_as_root**|Открыть текстовый файл в редакторе xed от имени root|
 ## Сценарии (scripts)
+
+/home/имя_пользователя/.local/share/nemo/scripts
+
 |Файл|
 |---|
 |**Безвозвратное удаление**|
@@ -80,3 +99,4 @@
 |**Загрузить на transfersh**|
 |**Загрузить на wetransfer**|
 |**Контрольная сумма**|
+|**Проверить на вирусы.sh**|
