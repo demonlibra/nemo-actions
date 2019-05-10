@@ -2,31 +2,38 @@
 
 #Дополнительные параметры
 
-temp_index="/tmp"				#Каталог для временного индекса. Хранится только до перезагрузки ПК.
-home_index="$HOME/.recoll"		#Каталог для постоянного индекса
+temp_index_recoll="/tmp"				#Каталог для временного индекса. Хранится только до перезагрузки ПК.
+home_index_recoll="$HOME/.recoll"		#Каталог для постоянного индекса
 
-FORM=`yad --borders=10 --title="Поиск строк в докуметах - recoll" --form --item-separator="|" --separator="," --field=":LBL" --field="Введите строку для поиска" --field="Вывод результата:CB" --field="Сохранить индекс после перезагрузки ПК:CB" "" "" "zenity|^recoll" "^Да|Нет"`
+FORM=`yad --borders=10 --title="Поиск строк в докуметах" --form --item-separator="|" --separator="," --field=":LBL" --field="Введите строку для поиска" --field="Программа для поиска:CB" --field="Вывод результата:CB" --field="Сохранить индекс recoll после перезагрузки ПК:CB" "" "" "^recoll|pdfgrep" "zenity|^recoll" "^Да|Нет"`
 
 if [ $? = 0 ]
 	then
 		text=$( echo $FORM | awk -F ',' '{print $2}')
-		out=$( echo $FORM | awk -F ',' '{print $3}')
-		save_index=$( echo $FORM | awk -F ',' '{print $4}')
+		tool=$( echo $FORM | awk -F ',' '{print $3}')
+		out=$( echo $FORM | awk -F ',' '{print $4}')
+		save_index_recoll=$( echo $FORM | awk -F ',' '{print $5}')
 		
-		if [[ "$save_index" = "Да" ]]
-			then PathIndex=$home_index
-			else PathIndex=$temp_index
+		if [[ "$save_index_recoll" = "Да" ]]
+			then path_index_recoll=$home_index_recoll
+			else path_index_recoll=$temp_index_recoll
 		fi
 		
-		find "$@" -type f \( -iname "*.pdf" -or -iname "*.doc" -or -iname "*.docx" -or -iname "*.xls" -or -iname "*.xlsx" -or -iname "*.txt" -or -iname "*.rtf" -or -iname "*.odt" \) -print | recollindex -c $PathIndex -i -e -f
+		if [ "$tool" = "recoll" ]
+			then
+				find "$@" -type f \( -iname "*.pdf" -or -iname "*.doc" -or -iname "*.docx" -or -iname "*.xls" -or -iname "*.xlsx" -or -iname "*.txt" -or -iname "*.rtf" -or -iname "*.odt" \) -print | recollindex -c $path_index_recoll -i -e -f
 				
-		if [ $out = "zenity" ]
-			then 
-				result=`recoll -c $PathIndex -t -b -q "$text"`
-				zenity --info --width=1000 --title="Результат поиска в PDF" --text="$result"
+				if [ $out = "zenity" ]
+					then 
+						result=`recoll -c $path_index_recoll -t -b -q "$text"`
+						zenity --info --width=1000 --title="Результат поиска в PDF - recoll" --text="$result"
 		
-		elif [ $out = "recoll" ]
-			then 
-				result=`recoll -c $PathIndex -q "$text"`
+					else result=`recoll -c $path_index_recoll -q "$text"`
+				fi
+			
+		else
+			result=`find "$@" -type f -iname "*.pdf" -print0 | xargs -0 pdfgrep -H -n --ignore-case "$text"`
+			zenity --info --width=1000 --title="Результат поиска в PDF - pdfgrep" --text="$result"
 		fi
+		
 fi

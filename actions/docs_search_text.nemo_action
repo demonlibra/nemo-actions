@@ -19,7 +19,7 @@ Icon-Name=recoll
 # What type selection: [s]ingle, [m]ultiple, any, notnone, none (background click), or
 # a number representing how many files must be selected to display.
 # ****** REQUIRED *******
-Selection=notnone
+Selection=any
 
 # What extensions to display on - this is an array, end with a semicolon
 # Single entry options, ending in a semicolon:
@@ -30,8 +30,7 @@ Selection=notnone
 # Individual specific extensions can be a semicolon-terminated list
 # Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
-Extensions=dir
-#Extensions=pdf;doc;docx;rtf;txt;odt;xls;xsls;ods
+Extensions=any;
 
 # What mime-types to display on - this is an array, end with a semicolon
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****

@@ -88,7 +88,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**pdf_export_image**|Извлечь изображения из PDF|
 |**pdf_export_pages**|Извлечь страницы из PDF|
 |**pdf_print**|Распечатать документ PDF|
-|**pdf_search_text**|Найти строку в файлах PDF|
+|**pdf_search_text**|Найти строку в файлах PDF при помощи pdfgrep|
 |**pdf_unite2**|Объединить файлы pdf и изображения в PDF|
 |**pdf_unite**|Объединить (только) файлы PDF|
 |**ps_convert**|Преобразовать postscript в PDF или PNG|
