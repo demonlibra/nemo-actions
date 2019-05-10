@@ -10,11 +10,6 @@ if ! [ -f "$pathtoqcad/dwg2bmp" ] && ! [ -f "$pathtoqcad/dwg2svg" ] && ! [ -f "$
 		exit 1
 fi
 
-#Проверка установки пакета yad
-if [ -z "`dpkg -l | grep yad`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета yad" -- bash -c "echo \"yad не установлен\"; echo ; sudo apt install yad; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
-fi
-
 fullpathname=$@
 name=${fullpathname##*/}
 path=${fullpathname%/*}
