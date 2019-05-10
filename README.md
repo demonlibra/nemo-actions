@@ -63,7 +63,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**clamav**|Проверить на вирусы программой clamav|
 |**deb_install**|Установить пакет deb в терминале утилитой dpkg|
 |**docs_print**|Распечатать документы csv doc docx html ods odt ppt rtf txt xls xsls |
-|**docs_search_text**|Найти строку в документах при помощи recoll|
+|**docs_search_text**|Найти строку в документах|
 |**docs_to_pdf**|Преобразовать документы в PDF с помощью libreoffice|
 |**docs_to_pdf_unoconv**|Преобразовать документы в PDF с помощью unoconv и libreoffice|
 |**doublecmd**|Открыть выбранный каталог в DoubleCommander|

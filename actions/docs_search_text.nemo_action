@@ -7,7 +7,7 @@ Active=true
 Name=Найти строку в документах
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Найти строку в документах при помощи recoll
+Comment=Найти строку в документах
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****

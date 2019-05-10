@@ -5,7 +5,7 @@
 temp_index_recoll="/tmp"				#Каталог для временного индекса. Хранится только до перезагрузки ПК.
 home_index_recoll="$HOME/.recoll"		#Каталог для постоянного индекса
 
-FORM=`yad --borders=10 --title="Поиск строк в докуметах" --form --item-separator="|" --separator="," --field=":LBL" --field="Введите строку для поиска" --field="Программа для поиска:CB" --field="Вывод результата:CB" --field="Сохранить индекс recoll после перезагрузки ПК:CB" "" "" "^recoll|pdfgrep" "zenity|^recoll" "^Да|Нет"`
+FORM=`yad --borders=10 --title="Поиск строк в докуметах" --form --item-separator="|" --separator="," --field=":LBL" --field="Введите строку для поиска" --field="Программа для поиска:CB" --field="Вывод результата:CB" --field="Сохранить индекс recoll после перезагрузки ПК:CHK" --field="Искать документы в подкаталогах:CHK" "" "" "^recoll|pdfgrep" "zenity|^recoll" TRUE TRUE`
 
 if [ $? = 0 ]
 	then
@@ -13,15 +13,20 @@ if [ $? = 0 ]
 		tool=$( echo $FORM | awk -F ',' '{print $3}')
 		out=$( echo $FORM | awk -F ',' '{print $4}')
 		save_index_recoll=$( echo $FORM | awk -F ',' '{print $5}')
+		recursive=$( echo $FORM | awk -F ',' '{print $6}')
 		
-		if [[ "$save_index_recoll" = "Да" ]]
+		if [ $save_index_recoll = "TRUE" ]
 			then path_index_recoll=$home_index_recoll
 			else path_index_recoll=$temp_index_recoll
 		fi
 		
+		if [ $recursive = "FALSE" ]
+			then recursive_option="-maxdepth 1"
+		fi
+		
 		if [ "$tool" = "recoll" ]
 			then
-				find "$@" -type f \( -iname "*.pdf" -or -iname "*.doc" -or -iname "*.docx" -or -iname "*.xls" -or -iname "*.xlsx" -or -iname "*.txt" -or -iname "*.rtf" -or -iname "*.odt" \) -print | recollindex -c $path_index_recoll -i -e -f
+				find "$@" $recursive_option -type f \( -iname "*.pdf" -or -iname "*.doc" -or -iname "*.docx" -or -iname "*.xls" -or -iname "*.xlsx" -or -iname "*.txt" -or -iname "*.rtf" -or -iname "*.odt" \) -print | recollindex -c $path_index_recoll -i -e -f
 				
 				if [ $out = "zenity" ]
 					then 
@@ -32,7 +37,8 @@ if [ $? = 0 ]
 				fi
 			
 		else
-			result=`find "$@" -type f -iname "*.pdf" -print0 | xargs -0 pdfgrep -H -n --ignore-case "$text"`
+		
+			result=`find "$@" $recursive_option -type f -iname "*.pdf" -print0 | xargs -0 pdfgrep -H -n --ignore-case "$text"`
 			zenity --info --width=1000 --title="Результат поиска в PDF - pdfgrep" --text="$result"
 		fi
 		
