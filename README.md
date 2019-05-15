@@ -12,6 +12,8 @@
 Настройки задаются в одноименных файлах с расширением `.nemo_action`  
 Подробное описание смотрите в файлах `help` и `help_ru`.
 
+Вопросы можно задать в разделе [Issues](https://github.com/demonlibra/nemo-actions/issues) или на форуме [LinuxMint.com.ru](https://linuxmint.com.ru/viewtopic.php?t=4416)
+
 ## Установка
 Скачайте нужные файлы и разместите их в соответствующих каталогах или используйте полный архив следующим способом:
 
@@ -21,7 +23,7 @@
 ```
 unzip nemo-actions-master.zip
 ```
-2.2 Скопируйте файлы в каталог **/home/имя_пользователя/.local/share/nemo/**
+2.2. Скопируйте файлы в каталог **/home/имя_пользователя/.local/share/nemo/**
 ```
 cd nemo-actions-master
 cp actions/*.sh $HOME/.local/share/nemo/actions/
