@@ -84,6 +84,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**ocr**|Распознать текст программами cuneiform или tesseract|
 |**ocr_tesseract**|Распознать текст программой tesseract|
 |**pdf_compress**|Уменьшить размер файла PDF сжатием изображений |
+|**pdf_convert_to_image_multiple**|Преобразовать несколько документов PDF в изображения|
 |**pdf_convert_to_image**|Преобразовать страницы PDF в изображения|
 |**pdf_convert_to_text**|Преобразовать PDF в текст|
 |**pdf_decrypt**|Снять защиту с PDF|
