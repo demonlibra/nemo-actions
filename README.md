@@ -50,9 +50,12 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 2. Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:  
 `sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo recoll secure-delete tesseract-ocr tesseract-ocr-rus unoconv`
 
-3. **dwgdxf_convert** используйет модули программы **QCAD**. Необходимо скачать и распаковать архив [qcad-3.xxx.linux.tar.gz или qcad-3.xxx.linux-qt4.tar.gz](https://www.ribbonsoft.com/en/qcad-downloads-trial)  
+3. **dwgdxf_convert** использует модули программы **QCAD**. Необходимо скачать и распаковать архив [qcad-3.xxx.linux.tar.gz или qcad-3.xxx.linux-qt4.tar.gz](https://www.ribbonsoft.com/en/qcad-downloads-trial)  
 При выполнении присутствует 15 секундная задержка. Если выполнить в терминале то увидите сообщение: You are using a trial version of the QCAD Professional plugin. If you would like to use this software productively, please purchase the full version ... После истечения 15 секунд выполнение продолжается.  
 В переменной **pathtoqcad** необходимо указать путь к папке, содержащей скрипты **dwg2bmp, dwg2svg и dwg2bmp**.
+
+4. firefoxsend использует программу **ffsend**. Необходимо скачать [ffsend-v____-linux-x64](https://github.com/timvisee/ffsend/releases), переименовать, сделать исполняемым и перенести бинарный файл `ffsend` в каталог `/usr/local/bin/`
+`mv ./ffsend-* ./ffsend; chmod a+x ./ffsend; sudo mv ./ffsend /usr/bin`
 
 ## Действия (actions)
 

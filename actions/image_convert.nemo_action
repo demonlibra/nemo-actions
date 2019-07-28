@@ -29,7 +29,7 @@ Selection=notnone
 # Individual specific extensions can be a semicolon-terminated list
 # Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
-Extensions=bmp;gif;ico;jpe;jpg;jpeg;png;ppm;tif;tiff;
+Extensions=bmp;gif;ico;jpe;jpg;jpeg;png;ppm;tif;tiff;webp
 
 # What mime-types to display on - this is an array, end with a semicolon
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****

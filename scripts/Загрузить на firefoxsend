@@ -54,7 +54,7 @@ if [ $? = 0 ]
 				link=`ffsend -q upload "$first_element"`
 		fi
 		
-		if [[ `echo $link | grep "https://send.firefox.com"` ]]													#Проверка удачной загрузки
+		if [[ `echo $link | grep "https://send.firefox.com/download"` ]]										#Проверка удачной загрузки
 			then
 				echo -n "$link" | xclip -i -selection clipboard
 				notify-send -t 10000 -i "gtk-ok" "Загрузка на Firefox Send завершена" "Ссылка скопирована в буфер обмена"
