@@ -47,7 +47,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 `sudo apt install yad libnotify-bin xclip`
 
 
-2. Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract. Для их установки выполните в терминале следующую команду:  
+2. Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract, webp. Для их установки выполните в терминале следующую команду:  
 `sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo recoll secure-delete tesseract-ocr tesseract-ocr-rus unoconv`
 
 3. **dwgdxf_convert** использует модули программы **QCAD**. Необходимо скачать и распаковать архив [qcad-3.xxx.linux.tar.gz или qcad-3.xxx.linux-qt4.tar.gz](https://www.ribbonsoft.com/en/qcad-downloads-trial)  
@@ -93,10 +93,11 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**pdf_decrypt**|Снять защиту с PDF|
 |**pdf_export_image**|Извлечь изображения из PDF|
 |**pdf_export_pages**|Извлечь страницы из PDF|
-|**pdf_print**|Распечатать документ PDF|
+|**pdf_print**|Отправить на принтер по умолчанию документ|
 |**pdf_search_text**|Найти строку в файлах PDF при помощи pdfgrep|
 |**pdf_unite2**|Объединить файлы pdf и изображения в PDF|
 |**pdf_unite**|Объединить (только) файлы PDF|
+|**print**|Отправить на принтер по умолчанию документ или изображение |
 |**ps_convert**|Преобразовать postscript в PDF или PNG|
 |**py_run**|Выполнить сценарий python|
 |**qbittorrent**|Добавить в qbittorrent с одинаковыми параметрами|

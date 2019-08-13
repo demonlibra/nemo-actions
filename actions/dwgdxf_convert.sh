@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Дополнительные параметры
-pathtoqcad="$HOME/.qcad" #Путь к папке, содержащей скрипты dwg2bmp, dwg2svg и dwg2pdf
+pathtoqcad="$HOME/App/qcad" #Путь к папке, содержащей скрипты dwg2bmp, dwg2svg и dwg2pdf
 
 #Проверка наличия программы QCAD
 if ! [ -f "$pathtoqcad/dwg2bmp" ] && ! [ -f "$pathtoqcad/dwg2svg" ] && ! [ -f "$pathtoqcad/dwg2pdf" ]

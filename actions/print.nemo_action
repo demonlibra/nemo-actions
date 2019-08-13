@@ -1,18 +1,18 @@
 [Nemo Action]
 
-Active=false
+Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Распечатать документ PDF
+Name=Распечатать
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Отправить на принтер по умолчанию документ
+Comment=Отправить на принтер по умолчанию документ или изображение 
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
 #Exec=bash -c "gs -dNOPAUSE -dBATCH -sDEVICE=ps2write -sProcessColorModel=DeviceCMYK -sOutputFile=/tmp/print.ps %F; lp /tmp/print.ps"
-Exec=bash -c "pdftops %F - | lpr"
+Exec=lp %F
 
 Icon-Name=cups
 
@@ -30,7 +30,7 @@ Selection=s
 # Individual specific extensions can be a semicolon-terminated list
 # Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
-Extensions=pdf;
+Extensions=pdf;png;jpg;
 
 # Quote type to use (if any) - enclose paths/urls with quotes.  Optional - defaults
 # to no quotes.  
