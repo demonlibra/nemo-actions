@@ -54,7 +54,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 При выполнении присутствует 15 секундная задержка. Если выполнить в терминале то увидите сообщение: You are using a trial version of the QCAD Professional plugin. If you would like to use this software productively, please purchase the full version ... После истечения 15 секунд выполнение продолжается.  
 В переменной **pathtoqcad** необходимо указать путь к папке, содержащей скрипты **dwg2bmp, dwg2svg и dwg2bmp**.
 
-4. firefoxsend использует программу **ffsend**. Необходимо скачать [ffsend-v____-linux-x64](https://github.com/timvisee/ffsend/releases), переименовать, сделать исполняемым и перенести бинарный файл `ffsend` в каталог `/usr/local/bin/`
+4. **firefoxsend** использует программу **ffsend**. Необходимо скачать [ffsend-v____-linux-x64](https://github.com/timvisee/ffsend/releases), переименовать в `ffsend`, сделать исполняемым и перенести бинарный файл `ffsend` в каталог `/usr/local/bin/`  
 `mv ./ffsend-* ./ffsend; chmod a+x ./ffsend; sudo mv ./ffsend /usr/bin`
 
 ## Действия (actions)
@@ -121,4 +121,5 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**Загрузить на transfersh**|
 |**Загрузить на wetransfer**|
 |**Контрольная сумма**|
+|**Отправить через ssh**|
 |**Проверить на вирусы**|

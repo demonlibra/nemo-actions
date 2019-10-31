@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FORM=`yad --borders=10 --title="qbittorent" --text="" --text-align=center --form --separator="," --item-separator="|" --field=:LBL --field="Путь для загрузки:DIR" --field="Пропустить диалоговые окна:CHK" --field="Загружать последовательно:CHK" --field="Загружать с первой и последней части:CHK" --field="Добавить остановленными:CHK" "" "" TRUE TRUE TRUE FALSE`
+FORM=`yad --borders=10 --title="qbittorent" --text="" --text-align=center --form --separator="," --item-separator="|" --field=:LBL --field="Путь для загрузки:DIR" --field="Пропустить диалоговые окна:CHK" --field="Загружать последовательно:CHK" --field="Загружать с первой и последней части:CHK" --field="Добавить остановленными:CHK" "" "" TRUE FALSE FALSE FALSE`
 
 if [ $? = 0 ]
 	then
