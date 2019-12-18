@@ -14,9 +14,14 @@ if [ $? = 0 ]
 	then
 		start=$(echo $AAA | awk -F ',' '{print $2}')
 		finish=$(echo $AAA | awk -F ',' '{print $3}')
-		options="-ss $start -to $finish"
-
-		ffmpeg -i "$fullpathname" -y -vcodec copy -acodec copy $options -strict -2 "${fullpathname%.*}_${start/:/-}_${finish/:/-}.$ext"
+		sufix="${start/:/-}_${finish/:/-}"
+		
+		if [ "$start" != "" ]; then start="-ss $start"; fi
+		if [ "$finish" != "" ]; then finish="-to $finish"; fi
+		
+		options="$start $finish"
+		
+		ffmpeg -i "$fullpathname" -y -vcodec copy -acodec copy $options -strict -2 "${fullpathname%.*}_$sufix.$ext"
 
 		notify-send -t 10000 -i "gtk-ok" "Завершено" "Вырезан фрагмент из файла:\n$name"
 fi
