@@ -26,10 +26,10 @@ if [ $? = 0 ]
 		kolfile=$#					#Количество выделенных файлов
 		
 		if [ $direction = "вертикально" ]
-			then montage "$@" -geometry +0+$space -tile 1x$kolfile "$path/$newname.$ext"
+			then montage -geometry +0+$space -tile 1x$kolfile "$@" "$path/$newname.$ext"
 		fi
 		
 		if [ $direction = "горизонтально" ]
-			then montage "$@" -geometry +$space+0 -tile "$kolfile"x1 "$path/$newname.$ext"
+			then montage -geometry +$space+0 -tile "$kolfile"x1 "$@" "$path/$newname.$ext"
 		fi
 fi
