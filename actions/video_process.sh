@@ -11,7 +11,7 @@ scale=`echo "scale=2;$width/$height" |bc`
 
 #AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," --field=:LBL --field="Формат:CB" --field="Bitrate (kbit)" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" "" "оригинал|^mkv|mov|mp4|avi" "2000" "" "^оригинал|^h264|hevc|mpeg4|mpeg2video" "оригинал|^mp3|aac" FALSE FALSE`
 
-AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," --field=:LBL --field="Формат:CB" --field="Bitrate (kbit):NUM" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Поворот:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" --field="Количество кадров" "" "оригинал|^mkv|mov|mp4|avi|gif" "4000|0..10000|500" "" "^оригинал|^h264|hevc|mpeg4|mpeg2video" "оригинал|^mp3|aac" "^Нет|По часовой|Против часовой" FALSE FALSE`
+AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," --field=:LBL --field="Формат:CB" --field="Bitrate (kbit):NUM" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Обрезать W:H:X:Y (Ширина : Высота : X левого угла : Y левого угла):" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Поворот:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" --field="Количество кадров" "" "оригинал|^mkv|mov|mp4|avi|gif" "4000|0..10000|500" "" "" "^оригинал|^h264|hevc|mpeg4|mpeg2video" "оригинал|^mp3|aac" "^Нет|По часовой|Против часовой" FALSE FALSE`
 
 if [ $? = 0 ]
 	then
@@ -28,18 +28,23 @@ if [ $? = 0 ]
 				optionsize="-s $size"
 				sizeprefix="_$size"
 			fi
+		
+		crop=$( echo $AAA | awk -F ',' '{print $5}')
+		if [ "$crop" != "" ]
+			then cropprefix="-filter:v crop=$crop"
+		fi
 
-		videocodec=$( echo $AAA | awk -F ',' '{print $5}')
+		videocodec=$( echo $AAA | awk -F ',' '{print $6}')
 		if [[ "$videocodec" != "оригинал" ]] && [[ "$format" != "gif" ]]
 			then optionvideocodec="-vcodec $videocodec"
 		fi
 
-		audiocodec=$( echo $AAA | awk -F ',' '{print $6}')
+		audiocodec=$( echo $AAA | awk -F ',' '{print $7}')
 		if [ $audiocodec != "оригинал" ]
 			then optionaudiocodec="-acodec $audiocodec"
 		fi
 		
-		rotate=$( echo $AAA | awk -F ',' '{print $7}')
+		rotate=$( echo $AAA | awk -F ',' '{print $8}')
 		if [[ "$rotate" = "По часовой" ]]
 			then
 				option_rotate="-vf transpose=1"
@@ -50,21 +55,21 @@ if [ $? = 0 ]
 				prefix="_CCW"
 		fi
 
-		test=$( echo $AAA | awk -F ',' '{print $8}')
+		test=$( echo $AAA | awk -F ',' '{print $9}')
 		if [ "$test" = "TRUE" ]
 			then
 				testcode="-ss 00:00:05 -to 00:00:10"
 				prefix=$prefix"_5sec"
 		fi
 
-		nosound=$( echo $AAA | awk -F ',' '{print $9}')
+		nosound=$( echo $AAA | awk -F ',' '{print $10}')
 		if [ "$nosound" = "TRUE" ]
 			then
 					optionaudiocodec="-an"
 					prefix=$prefix"_nosound"
 		fi
 
-		frame_rate=$( echo $AAA | awk -F ',' '{print $10}')
+		frame_rate=$( echo $AAA | awk -F ',' '{print $11}')
 		if [ "$frame_rate" != "" ]
 			then
 					option_frame_rate="-r "$frame_rate
@@ -96,8 +101,8 @@ if [ $? = 0 ]
 					else duration=$durationS" сек"
 				fi
 						
-
-				gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Обработка файла $counter из $kolfile - ${file##*/} длительностью $duration" -e "ffmpeg -hide_banner -i \"$file\" -y -b:v \"$bitrate\"k $option_rotate $optionvideocodec $optionsize $optionaudiocodec $option_frame_rate $testcode -strict -2 \"${file%.*}\"$sizeprefix\"_$bitrate\"k\"$prefix.$ext\""
+				gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Обработка файла $counter из $kolfile - ${file##*/} длительностью $duration" -e "ffmpeg -hide_banner -i \"$file\" $cropprefix -y -b:v \"$bitrate\"k $option_rotate $optionvideocodec $optionsize $optionaudiocodec $option_frame_rate $testcode -strict -2 \"${file%.*}\"$sizeprefix\"_$bitrate\"k\"$prefix.$ext\""
+				echo "$cropprefix" > 1
 			done
 
 			notify-send -t 10000 -i "gtk-ok" "Завершено" "Обработка видео $codec $bitrate kbit"

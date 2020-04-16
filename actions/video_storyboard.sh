@@ -31,7 +31,7 @@ if [ $? = 0 ]
 				new_path="$path"
 		fi
 		
-		gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Раскадровка файла $name" -e "ffmpeg -hide_banner -ss $start $option1 -i \"$fullpathname\" $option2 \"$new_path/${name%.*}-%d.$format\""
+		gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Раскадровка файла $name" -e "ffmpeg -hide_banner -ss $start $option1 -i \"$fullpathname\" $option2 \"$new_path/${name%.*}-%3d.$format\""
 		
 		notify-send -t 10000 -i "gtk-ok" "Завершено" "Раскадровка завершена:\n$name"
 fi
