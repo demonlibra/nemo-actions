@@ -108,6 +108,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**video_cut**|Вырезать фрагмент мультимедиа|
 |**video_info**|Получить информацию о файле мультимедиа при помощи mediainfo|
 |**video_process**|Изменить формат, bitrate, разрешение, кодек, поворот|
+|**video_storyboard**|Раскадровка видео|
 |**wetransfer**|Загрузить на Wetransfer|
 |**xed_as_root**|Открыть текстовый файл в редакторе xed от имени root|
 ## Сценарии (scripts)
