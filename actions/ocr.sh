@@ -4,7 +4,7 @@ fullpathname=$@
 name=${fullpathname##*/}
 path=${fullpathname%/*}
 
-FORM=`yad --borders=10 --width=300 --title="Распознавание изображения" --text-align=center --text="Укажите параметры" --form --item-separator="|" --separator="," --field=:LBL --field="Выберите программу распознавания:CB" --field="Выберите язык текста:CB" "" "cuneiform|^tesseract" "Русский|Английский|Смешанный"`
+FORM=`yad --borders=10 --width=300 --title="Распознавание изображения" --text-align=center --text="Укажите параметры" --form --item-separator="|" --separator="," --field=:LBL --field="Выберите программу распознавания:CB" --field="Выберите язык текста:CB" "" "cuneiform|^tesseract" "Русский|Английский|Итальянский|Смешанный"`
 
 if [ $? = 0 ]
 	then
@@ -25,6 +25,7 @@ if [ $? = 0 ]
 		then
 			if [ "$lang" = "Русский" ]; then lang="rus"
 			elif [ "$lang" = "Английский" ]; then lang="eng"
+			elif [ "$lang" = "Итальянский" ]; then lang="ita"
 			else lang="rus+eng"
 			fi
 			
