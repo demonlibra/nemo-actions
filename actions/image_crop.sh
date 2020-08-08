@@ -9,7 +9,7 @@ if [ -z "`dpkg -l | grep zenity`" ]
 	then xfce4-terminal --hide-menubar --geometry=80x15 -T "Установка пакета zenity" -x bash -c "echo \"zenity не установлен\"; echo ; sudo apt install zenity; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
-FORM=`yad --borders=10 --width=300 --title="Обрезать изображения" --text-align=center --text="Укажите параметры" --form --item-separator="|" --separator="," --field=:LBL --field="От центра?:CHK" --field="Перезаписать файл?:CHK" --field="Введите ширину и высоту (<width>x<height>{+-}<x>{+-}<y>)" "" TRUE FALSE "800x600+0+0"`
+FORM=`yad --borders=10 --width=300 --title="Обрезать изображения" --text-align=center --text="Укажите параметры" --form --item-separator="|" --separator="," --field=:LBL --field="Считать от центра:CHK" --field="Перезаписать файл:CHK" --field="Введите ширину и высоту (ШxВ+X+Y)" "" TRUE FALSE "800x600+0+0"`
 
 center=$( echo $FORM | awk -F ',' '{print $2}')
 rewrite=$( echo $FORM | awk -F ',' '{print $3}')
