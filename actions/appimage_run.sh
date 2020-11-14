@@ -4,7 +4,7 @@ fullpathname="$@"
 name=${fullpathname##*/}
 path=${fullpathname%/*}
 
-app_dir="$HOME/App"						#Общий каталог для пакетов AppImage
+app_dir="$HOME/app"						#Общий каталог для пакетов AppImage
 
 if ! [ -d $app_dir ]
 	then mkdir "$app_dir"				#Создаем каталог для пакетов AppImage

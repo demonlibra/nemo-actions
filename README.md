@@ -84,6 +84,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**image_resolution**|Изменить разрешение изображений|
 |**image_rotate**|Повернуть изображения|
 |**iso_mount**|Монтировать образ ISO программой gnome-disk-image-mounter|
+|**luckyluks**|Монтировать контейнер|
 |**ocr_cuneiform**|Распознать текст программой cuneiform|
 |**ocr**|Распознать текст программами cuneiform или tesseract|
 |**ocr_tesseract**|Распознать текст программой tesseract|
@@ -104,6 +105,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**qbittorrent**|Добавить в qbittorrent с одинаковыми параметрами|
 |**secure_delete**|Удаление без возможности восстановления средствами Secure delete|
 |**sh_run**|Выполнить скрипт bash|
+|**stl2png**|Конвертировать STL в PNG|
 |**transfersh**|Загрузить на Transfer.sh|
 |**txt_convert_encoding**|Изменить кодировку текстовых файлов при помощи enconv|
 |**video_cut**|Вырезать фрагмент мультимедиа|

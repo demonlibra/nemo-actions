@@ -102,7 +102,6 @@ if [ $? = 0 ]
 				fi
 						
 				gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Обработка файла $counter из $kolfile - ${file##*/} длительностью $duration" -e "ffmpeg -hide_banner -i \"$file\" $cropprefix -y -b:v \"$bitrate\"k $option_rotate $optionvideocodec $optionsize $optionaudiocodec $option_frame_rate $testcode -strict -2 \"${file%.*}\"$sizeprefix\"_$bitrate\"k\"$prefix.$ext\""
-				echo "$cropprefix" > 1
 			done
 
 			notify-send -t 10000 -i "gtk-ok" "Завершено" "Обработка видео $codec $bitrate kbit"
