@@ -1,0 +1,37 @@
+#!/bin/bash
+
+AAA=`yad --borders=10 --title="stl 2 png" --text="Конвертация stl в png" --text-align=center --form --field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Автоцентровка:CHK" --field="Вписать модель в размер:CHK" "" 1080 1080 TRUE TRUE`
+
+if [ $? = 0 ]
+	then
+		width=$( echo $AAA | awk -F '|' '{print $2}')
+		height=$( echo $AAA | awk -F '|' '{print $3}')
+
+		autocenter=$( echo $AAA | awk -F '|' '{print $4}')
+		if [ $autocenter = "TRUE" ]; then autocenter='--autocenter'; else autocenter=''; fi
+
+		viewall=$( echo $AAA | awk -F '|' '{print $5}')
+		if [ $viewall = "TRUE" ]; then viewall='--viewall'; else viewall=''; fi
+
+                #Поиск файлов STL и формирование списка
+                files=`find "$1" -type f -iname "*.stl" -print`
+
+                for file in $files
+                    do
+                      #Имя файла без пути
+                      filename="${file##*/}"
+
+                      #Создаём временный файл scad с командой импорта stl
+                      echo "import(\"${filename}\");" > "${file%.*}.scad"
+
+                      #Экспорт в png при помощи openSCAD
+                      openscad -o "${file%.*}.png" --autocenter --viewall --imgsize=$width,$height "${file%.*}.scad"
+
+                      #Удаление временного файла
+                      rm "${file%.*}.scad"
+
+                    done
+
+                #Вывод уведомления
+                notify-send -t 10000 -i "gtk-ok" "Завершено" "Создание файлов предварительного просмотра для STL"
+fi
