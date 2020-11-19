@@ -14,15 +14,13 @@ if [ $? = 0 ]
 		if [ $viewall = "TRUE" ]; then viewall='--viewall'; else viewall=''; fi
 
                 #Поиск файлов STL и формирование списка
-                files=`find "$1" -type f -iname "*.stl" -print`
-
-                for file in $files
+                find "$1" -type f -iname "*.stl" -print0 | while read -d $'\0' file
                     do
                       #Имя файла без пути
                       filename="${file##*/}"
 
                       #Создаём временный файл scad с командой импорта stl
-                      echo "import(\"${filename}\");" > "${file%.*}.scad"
+                      echo "import(\"${filename}\");" > "${file%.*}".scad
 
                       #Экспорт в png при помощи openSCAD
                       openscad -o "${file%.*}.png" --autocenter --viewall --imgsize=$width,$height "${file%.*}.scad"
