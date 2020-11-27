@@ -27,7 +27,7 @@ Selection=notnone
 # Individual specific extensions can be a semicolon-terminated list
 # Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
-Extensions=doc;docx;rtf;txt;odt;xls;xsls;ods
+Extensions=doc;docx;rtf;txt;odt;xls;xlsx;ods
 
 # What mime-types to display on - this is an array, end with a semicolon
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
