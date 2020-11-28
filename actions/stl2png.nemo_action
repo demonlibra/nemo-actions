@@ -4,10 +4,10 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Конвертировать STL в PNG
+Name=Создать изображение из STL
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Конвертировать STL в PNG
+Comment=Создать изображение из STL
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****

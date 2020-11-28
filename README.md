@@ -105,7 +105,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**qbittorrent**|Добавить в qbittorrent с одинаковыми параметрами|
 |**secure_delete**|Удаление без возможности восстановления средствами Secure delete|
 |**sh_run**|Выполнить скрипт bash|
-|**stl2png**|Конвертировать STL в PNG|
+|**stl2png**|Создать изображение из STL|
 |**transfersh**|Загрузить на Transfer.sh|
 |**txt_convert_encoding**|Изменить кодировку текстовых файлов при помощи enconv|
 |**video_cut**|Вырезать фрагмент мультимедиа|
