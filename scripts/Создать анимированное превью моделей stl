@@ -38,10 +38,14 @@ if [ $? = 0 ]
 		degree_step=$( echo $AAA | awk -F '|' '{print $12}')
 		delay=$( echo $AAA | awk -F '|' '{print $13}')
 
-		for file in "$@"
+		#Поиск файлов STL и формирование списка
+		find "$1" -type f -iname "*.stl" -print0 | while read -d $'\0' file
 			do
-				#Создание временного файла scad с командой импорта stl
-				echo "import(\"${file}\");" > "${file%.*}.scad"
+				#Имя файла без пути
+				filename="${file##*/}"
+
+				#Создаём временный файл scad с командой импорта stl
+				echo "import(\"${filename}\");" > "${file%.*}".scad
 
 				# Экспорт кадров в png при помощи openSCAD
 				num=0
@@ -51,8 +55,8 @@ if [ $? = 0 ]
 						name="${file%/*}/frame"`printf "%02d" $num`".png"
 						openscad -o "$name" --camera=$trans,$rotx,$roty,$rotz,$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad"
 					done
-
-                                # Объединение кадров в apng
+				
+				# Объединение кадров в apng
 				apngasm "${file%.*}.png" "${file%/*}/frame"*".png" $delay
 
 				# Удаление кадров
@@ -60,5 +64,9 @@ if [ $? = 0 ]
 
 				# Удаление временного файла scad
 				rm "${file%.*}.scad"
+
 			done
+
+		#Вывод уведомления
+		notify-send -t 10000 -i "gtk-ok" "Завершено" "Создание файлов предварительного просмотра для STL"
 fi
