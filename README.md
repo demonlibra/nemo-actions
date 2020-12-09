@@ -104,6 +104,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**py_run**|Выполнить сценарий python|
 |**qbittorrent**|Добавить в qbittorrent с одинаковыми параметрами|
 |**secure_delete**|Удаление без возможности восстановления средствами Secure delete|
+|**send_by_email**|Отправить по почте|
 |**sh_run**|Выполнить скрипт bash|
 |**stl2apng**|Создать анимированное изображение из STL|
 |**stl2png**|Создать изображение из STL|
