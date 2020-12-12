@@ -47,12 +47,11 @@ if [ $? = 0 ]
 		out_gif=$( echo $AAA | awk -F '|' '{print $15}')
 
 		number=`find "$@" -type f -iname "*.stl" -print | wc -l`	#Количество найденных файлов stl
-		procent=$((100/$number))					#Процентов на каждый файл
-
+		procent=$((100/$number))									#Процентов на каждый файл
+		
 		#Поиск файлов STL и формирование списка
 		find "$@" -type f -iname "*.stl" -print0 | (while read -d $'\0' file
 			do
-                        sleep 1
 				#Имя файла без пути
 				filename="${file##*/}"
 
@@ -65,14 +64,14 @@ if [ $? = 0 ]
 					do
 						num=$((num+1))
 						name="${file%/*}/frame"`printf "%02d" $num`".png"
-						openscad -o "$name" --camera=$trans,$rotx,$roty,$rotz,$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad"
+						openscad -q -o "$name" --camera=$trans,$rotx,$roty,$rotz,$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad" > /dev/null
 					done
 
 				# Объединение кадров в apng
-				apngasm "${file%.*}.png" "${file%/*}/frame"*".png" $delay
+				apngasm "${file%.*}.png" "${file%/*}/frame"*".png" $delay > /dev/null
 
 				# Создание файла в формате gif
-				if [ $out_gif = "TRUE" ]; then apng2gif "${file%.*}.png" "${file%.*}.gif"; fi
+				if [ $out_gif = "TRUE" ]; then apng2gif "${file%.*}.png" "${file%.*}.gif" > /dev/null; fi
 
 				# Удаление файла в формате apng
 				if [ $out_png = "FALSE" ]; then rm "${file%.*}.png"; fi
@@ -87,8 +86,8 @@ if [ $? = 0 ]
 				progress=$(($progress+$procent))
 				echo $progress
 				echo "# Обработано $counter из $number"
-			done) #| zenity --progress --title="Создание анимации из stl" --auto-close --auto-kill --width=350
-			#done
+			done) | zenity --progress --title="Создание анимации из stl" --percentage=0 --auto-kill --width=350 --auto-close
+		
 		#Вывод уведомления
 		notify-send -t 10000 -i "gtk-ok" "Завершено" "Создание файлов предварительного просмотра для STL"
 fi
