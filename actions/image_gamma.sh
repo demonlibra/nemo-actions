@@ -21,5 +21,7 @@ if [ $? = 0 ]
 			progress=$(($progress+$procent))
 			echo $progress
 			echo "# Обработано $counter из $kolfile"
-		done)|zenity --progress --title="Изменение гаммы изображений" --auto-close --auto-kill --width=350; notify-send -t 10000 -i "gtk-ok" "Завершено" "Изменение гаммы изображений на $AAA"
+		done)|zenity --progress --title="Изменение гаммы изображений" --auto-close --auto-kill --width=350
+		
+		notify-send -t 10000 -i "gtk-ok" "Завершено" "Изменение гаммы изображений на $AAA"
 fi

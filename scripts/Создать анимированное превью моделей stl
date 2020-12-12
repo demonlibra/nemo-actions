@@ -20,7 +20,7 @@ if [ -z "`dpkg -l | grep apng2gif`" ]
 	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета apng2gif" -- bash -c "echo \"apng2gif не установлен\"; echo ; sudo apt install apng2gif; echo ; echo ------------------ ; echo ; echo \"Установка apng2gif завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
-AAA=`yad --borders=10 --title="stl 2 apng" --text="Создание анимации из stl" --text-align=center --form --item-separator="|" --field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Угол поворота оси Z за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" "" 1080 1080  "ortho|perspective" "0,0,0" TRUE "500" TRUE 40 0 40 30 "1 5" TRUE FALSE`
+AAA=`yad --borders=10 --title="stl 2 apng" --text="Создание анимации из stl" --text-align=center --form --item-separator="|" --field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Угол поворота оси Z за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" "" 600 600  "ortho|perspective" "0,0,0" TRUE "500" TRUE 40 0 40 10 "1 5" FALSE TRUE`
 
 if [ $? = 0 ]
 	then
@@ -46,9 +46,13 @@ if [ $? = 0 ]
 		out_png=$( echo $AAA | awk -F '|' '{print $14}')
 		out_gif=$( echo $AAA | awk -F '|' '{print $15}')
 
+		number=`find "$@" -type f -iname "*.stl" -print | wc -l`	#Количество найденных файлов stl
+		procent=$((100/$number))					#Процентов на каждый файл
+
 		#Поиск файлов STL и формирование списка
-		find "$1" -type f -iname "*.stl" -print0 | while read -d $'\0' file
+		find "$@" -type f -iname "*.stl" -print0 | (while read -d $'\0' file
 			do
+                        sleep 1
 				#Имя файла без пути
 				filename="${file##*/}"
 
@@ -63,7 +67,7 @@ if [ $? = 0 ]
 						name="${file%/*}/frame"`printf "%02d" $num`".png"
 						openscad -o "$name" --camera=$trans,$rotx,$roty,$rotz,$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad"
 					done
-				
+
 				# Объединение кадров в apng
 				apngasm "${file%.*}.png" "${file%/*}/frame"*".png" $delay
 
@@ -78,9 +82,13 @@ if [ $? = 0 ]
 
 				# Удаление временного файла scad
 				rm "${file%.*}.scad"
-
-			done
-
+				
+				counter=$(($counter+1))
+				progress=$(($progress+$procent))
+				echo $progress
+				echo "# Обработано $counter из $number"
+			done) #| zenity --progress --title="Создание анимации из stl" --auto-close --auto-kill --width=350
+			#done
 		#Вывод уведомления
 		notify-send -t 10000 -i "gtk-ok" "Завершено" "Создание файлов предварительного просмотра для STL"
 fi
