@@ -25,12 +25,18 @@ if [ $? = 0 ]
 		viewall=$( echo $AAA | awk -F '|' '{print $6}')
 		if [ $viewall = "TRUE" ]; then viewall='--viewall'; else viewall=''; fi
 
-                camera_auto=$( echo $AAA | awk -F '|' '{print $7}')
-                camera_man=$( echo $AAA | awk -F '|' '{print $8}')
-                if [ "$camera_auto" != "TRUE" ]; then camera='--camera='${camera_man}; else camera=''; fi
+		camera_auto=$( echo $AAA | awk -F '|' '{print $7}')
+		camera_man=$( echo $AAA | awk -F '|' '{print $8}')
+		if [ "$camera_auto" != "TRUE" ]; then camera='--camera='${camera_man}; else camera=''; fi
 
-		for file in "$@"
+		number=$#
+		procent=$((100/$number))
+
+		(for file in "$@"
 			do
+				#Имя файла без пути
+				filename="${file##*/}"
+				
 				#Создание временного файла scad с командой импорта stl
 				echo "import(\"${file}\");" > "${file%.*}.scad"
 
@@ -39,5 +45,10 @@ if [ $? = 0 ]
 
 				# Удаление временного файла
 				rm "${file%.*}.scad"
-			done
+				
+				counter=$(($counter+1))
+				progress=$(($progress+$procent))
+				echo $progress
+				echo "# Обработано ${counter} из ${number}: ${filename}"
+		done) | zenity --progress --title="Создание превью для моделей STL" --percentage=0 --auto-kill --width=350 --auto-close
 fi

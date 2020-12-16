@@ -46,8 +46,14 @@ if [ $? = 0 ]
 		out_png=$( echo $AAA | awk -F '|' '{print $14}')
 		out_gif=$( echo $AAA | awk -F '|' '{print $15}')
 		
-		for file in "$@"
+		number=$#
+		procent=$((100/$number))
+		
+		(for file in "$@"
 			do
+				#Имя файла без пути
+				filename="${file##*/}"
+				
 				#Создание временного файла scad с командой импорта stl
 				echo "import(\"${file}\");" > "${file%.*}.scad"
 
@@ -74,5 +80,10 @@ if [ $? = 0 ]
 
 				# Удаление временного файла scad
 				rm "${file%.*}.scad"
-			done
+				
+				counter=$(($counter+1))
+				progress=$(($progress+$procent))
+				echo $progress
+				echo "# Обработано ${counter} из ${number}: ${filename}"
+			done) | zenity --progress --title="Создание превью для моделей STL" --percentage=0 --auto-kill --width=350 --auto-close
 fi
