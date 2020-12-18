@@ -29,6 +29,8 @@ if [ $? = 0 ]
 		#Поиск файлов STL и формирование списка
 		find "$@" -type f -iname "*.stl" -print0 | (while read -d $'\0' file
 			do
+				Start_Time=$(date +%s%N)	# Время начала обработки файлы STL
+				
 				#Имя файла без пути
 				filename="${file##*/}"
 
@@ -49,10 +51,18 @@ if [ $? = 0 ]
 
 				counter=$(($counter+1))
 				progress=$(($progress+$procent))
-				echo $progress
-				echo "# Обработано ${counter} из ${number}: ${filename}"
 				
-			done) | zenity --progress --title="Создание превью для моделей STL" --percentage=0 --auto-kill --width=350 --auto-close
+				# Расчёт оставшегося времени исполнения сценария
+				End_Time=$(date +%s%N)												# Время окончания обрабоки файла STL
+				Sum_Time_ms=$(( $Sum_Time_ms + ($End_Time - $Start_Time)/1000000 ))	# Прошедшее время (мс) обработки файлов STL
+				Everage_Time_ms=$(( $Sum_Time_ms / $counter ))						# Среднее время (мс) обработки каждого файла STL
+				Second_to_End=$(( $Everage_Time_ms * ($number - $counter) / 1000 ))	# Осталось секунд до завершения обработки всех файлов
+				Time_to_End=`date -d@${Second_to_End} -u +%Hч:%Mмин:%Sсек`
+				
+				echo $progress
+				echo "# Обработано: ${counter} файлов из ${number}\n\nОсталось до завершения: ${Time_to_End}\nЗавершена обработка файла: ${filename}"
+				
+			done) | zenity --progress --title="Создание превью для моделей STL" --percentage=0 --auto-kill --width=500 --auto-close
 
 		#Вывод уведомления
 		notify-send -t 10000 -i "gtk-ok" "Завершено" "Создание превью для моделей STL"
