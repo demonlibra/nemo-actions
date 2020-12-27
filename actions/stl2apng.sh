@@ -20,7 +20,9 @@ if [ -z "`dpkg -l | grep apng2gif`" ]
 	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета apng2gif" -- bash -c "echo \"apng2gif не установлен\"; echo ; sudo apt install apng2gif; echo ; echo ------------------ ; echo ; echo \"Установка apng2gif завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
-AAA=`yad --borders=10 --title="stl 2 apng" --text="Создание анимации из stl" --text-align=center --form --item-separator="|" --field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Угол поворота оси Z за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" "" 1080 1080  "ortho|perspective" "0,0,0" TRUE "500" TRUE 40 0 40 30 "1 5" TRUE FALSE`
+AAA=`yad --borders=10 --title="stl 2 apng" --text="Создание анимации из stl" --text-align=center --form --item-separator="|" \
+--field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Угол поворота оси Z за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" \
+"" 600 600  "ortho|perspective" "0,0,0" TRUE "500" TRUE 40 0 40 10 "1 5" FALSE TRUE`
 
 if [ $? = 0 ]
 	then
@@ -63,14 +65,14 @@ if [ $? = 0 ]
 					do
 						num=$((num+1))
 						name="${file%/*}/frame"`printf "%03d" $num`".png"
-						openscad -o "$name" --camera=$trans,$rotx,$roty,$rotz,$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad"
+						openscad -o "$name" --camera=$trans,$rotx,$roty,$rotz,$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad" > /dev/null
 					done
 
                                 # Объединение кадров в apng
-				apngasm "${file%.*}.png" "${file%/*}/frame"*".png" $delay
+				apngasm "${file%.*}.png" "${file%/*}/frame"*".png" $delay > /dev/null
 				
 				# Создание файла в формате gif
-				if [ $out_gif = "TRUE" ]; then apng2gif "${file%.*}.png" "${file%.*}.gif"; fi
+				if [ $out_gif = "TRUE" ]; then apng2gif "${file%.*}.png" "${file%.*}.gif" > /dev/null; fi
 				
 				# Удаление файла в формате apng
 				if [ $out_png = "FALSE" ]; then rm "${file%.*}.png"; fi
@@ -85,5 +87,6 @@ if [ $? = 0 ]
 				progress=$(($progress+$procent))
 				echo $progress
 				echo "# Обработано ${counter} из ${number}: ${filename}"
+
 			done) | zenity --progress --title="Создание превью для моделей STL" --percentage=0 --auto-kill --width=350 --auto-close
 fi

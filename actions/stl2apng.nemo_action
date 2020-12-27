@@ -4,7 +4,7 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Создать анимированное изображение из STL
+Name=Создать анимированное превью
 
 # Tool tip, locale supported (Appears in the status bar)
 Comment=Создать анимированное изображение из STL
