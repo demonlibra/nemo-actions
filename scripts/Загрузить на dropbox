@@ -1,0 +1,43 @@
+# https://riptutorial.com/dropbox-api/example/1376/retrieving-an-existing-shared-link-for-a-specific-file-using-curl
+# https://riptutorial.com/dropbox-api/topic/414/getting-a-shared-link-for-a-file-or-folder
+# https://riptutorial.com/dropbox-api/example/1378/creating-a-shared-link-for-a-file-using-curl
+
+# https://www.dropbox.com/developers/apps
+# Create app
+# Set name and access
+
+key='insert here your Auth 2 key which must be generated from dropbox site'
+
+fullpathname="$1"
+filename=${fullpathname##*/}
+
+# Загружаем файл
+curl -X POST https://content.dropboxapi.com/2/files/upload \
+	--header "Authorization: Bearer $key" \
+	--header "Dropbox-API-Arg: {\"path\": \"/$filename\"}" \
+	--header "Content-Type: application/octet-stream" \
+	--data-binary @"$fullpathname"
+
+# Создаём общую ссылку
+curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
+	--header "Authorization: Bearer $key" \
+	--header "Content-Type: application/json" \
+	--data "{\"path\": \"/$filename\",\"settings\": {\"requested_visibility\": \"public\"}}"
+
+# Получаем общую ссылку
+output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
+	--header "Authorization: Bearer $key" \
+	--header "Content-Type: application/json" \
+	--data "{\"path\": \"/$filename\", \"direct_only\": true}"`
+
+# Вырезаем ссылку из вывода curl
+link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`
+
+if [ `echo "$link" | grep -c "https://www.dropbox.com/"` ]
+	then
+		# Запись ссылку в буфер обмена
+		echo -n "$link" | xclip -i -selection clipboard
+		notify-send -t 10000 -i "gtk-ok" "Загрузка завершена" "Ссылка скопирована в буфер обмена:\n$link"
+	else
+		notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $status"
+	fi
