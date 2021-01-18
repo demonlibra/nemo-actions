@@ -1,43 +1,72 @@
+#!/bin/bash
+
 # https://riptutorial.com/dropbox-api/example/1376/retrieving-an-existing-shared-link-for-a-specific-file-using-curl
 # https://riptutorial.com/dropbox-api/topic/414/getting-a-shared-link-for-a-file-or-folder
 # https://riptutorial.com/dropbox-api/example/1378/creating-a-shared-link-for-a-file-using-curl
 
-# https://www.dropbox.com/developers/apps
-# Create app
-# Set name and access
+####################################################################################################
+### ------------------------------------- Instruction to setup ----------------------------------###
+# Open in browser https://www.dropbox.com/developers/apps
+# Select "Create app"
+# Select "Scoped access"
+# Select "App folder"
+# Set "Name your app"
+# Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
+# Generate "OAuth 2" and insert it below
 
-key='insert here your Auth 2 key which must be generated from dropbox site'
+key='Insert here "OAuth 2" key'
 
-fullpathname="$1"
-filename=${fullpathname##*/}
+####################################################################################################
+### ------------------------------------- Script ----------------------------------------------- ###
 
-# Загружаем файл
-curl -X POST https://content.dropboxapi.com/2/files/upload \
-	--header "Authorization: Bearer $key" \
-	--header "Dropbox-API-Arg: {\"path\": \"/$filename\"}" \
-	--header "Content-Type: application/octet-stream" \
-	--data-binary @"$fullpathname"
+# Генерируем имя каталога для загрузки
+timestamp=`date +%Y-%m-%d_%H-%M-%S`
+
+kolfile=$#						# Количество выделенных файлов
+procent=$((100/$kolfile))	# Процентов на каждый файл
+(for file in "$@"
+	do
+		filename=${file##*/}	# Имя файла без пути
+
+		# Загружаем файл
+		curl -X POST https://content.dropboxapi.com/2/files/upload \
+			--header "Authorization: Bearer $key" \
+			--header "Dropbox-API-Arg: {\"path\": \"/$timestamp/$filename\"}" \
+			--header "Content-Type: application/octet-stream" \
+			--data-binary @"$file" > /dev/null
+
+		counter=$(($counter+1))
+		progress=$(($progress+$procent))
+		echo $progress
+		echo "# Загружено файлов $counter из $kolfile"
+	done)|zenity --progress --title="Dropbox" --auto-close --auto-kill --width=250
+
+if [ $kolfile = 1 ]
+	then path="$timestamp/${1##*/}"	# Если загружается только один файл создаем ссылку непосредственно на файл
+	else path="$timestamp"				# Если загружается несколько файлов создаем ссылку на каталог
+fi
 
 # Создаём общую ссылку
-curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
+output=`curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
 	--header "Authorization: Bearer $key" \
 	--header "Content-Type: application/json" \
-	--data "{\"path\": \"/$filename\",\"settings\": {\"requested_visibility\": \"public\"}}"
+	--data "{\"path\": \"/$path\",\"settings\": {\"requested_visibility\": \"public\"}}"`
 
 # Получаем общую ссылку
-output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
-	--header "Authorization: Bearer $key" \
-	--header "Content-Type: application/json" \
-	--data "{\"path\": \"/$filename\", \"direct_only\": true}"`
+#output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
+#	--header "Authorization: Bearer $key" \
+#	--header "Content-Type: application/json" \
+#	--data "{\"path\": \"/$path\", \"direct_only\": true}"`
 
 # Вырезаем ссылку из вывода curl
 link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`
 
-if [ `echo "$link" | grep -c "https://www.dropbox.com/"` ]
+# Проверяем наличие ссылки и выводим уведомление
+if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
 	then
-		# Запись ссылку в буфер обмена
+		# Записываем ссылку в буфер обмена
 		echo -n "$link" | xclip -i -selection clipboard
-		notify-send -t 10000 -i "gtk-ok" "Загрузка завершена" "Ссылка скопирована в буфер обмена:\n$link"
+		notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
 	else
 		notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $status"
-	fi
+fi
