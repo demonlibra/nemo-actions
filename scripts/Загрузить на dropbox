@@ -6,6 +6,7 @@
 
 ####################################################################################################
 ### ------------------------------------- Instruction to setup ----------------------------------###
+
 # You must have Dropbox account
 # Open in browser https://www.dropbox.com/developers/apps
 # Select "Create app"
@@ -15,75 +16,102 @@
 # Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
 # Generate "OAuth 2" and insert it below
 
-key='Insert here your OAuth2 key'		# Ключ OAuth2
-path_for_log="$HOME/.dropbox_history"													# Путь файла для сохранения истории. Оставить пустым чтобы не сохранять историю.
+key='Generate "OAuth 2" and insert it here'		# Ключ OAuth2
+path_for_log="$HOME/.dropbox_history"													# Путь для сохранения истории. Оставить пустым чтобы не сохранять историю.
+
+localpath_for_app="/mnt/data/Dropbox/Приложения/fast_upload/"					# Каталог синхронизации данных созданного приложения 
+days_keep=30																					# Сколько дней хранить файлы перед удалением
+
 
 ####################################################################################################
 ### ------------------------------------- Script ----------------------------------------------- ###
 
-# Генерируем имя каталога для загрузки
-#timestamp=`date +%Y-%m-%d_%H-%M-%S`
-folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`
-
 kolfile=$#						# Количество выделенных файлов
-procent=$((100/$kolfile))	# Процентов на каждый файл
-(for file in "$@"
-	do
-		filename=${file##*/}	# Имя файла без пути
-
-		# Загружаем файл
-		curl -X POST https://content.dropboxapi.com/2/files/upload \
-			--header "Authorization: Bearer $key" \
-			--header "Dropbox-API-Arg: {\"path\": \"/${folder_to_upload}/$filename\"}" \
-			--header "Content-Type: application/octet-stream" \
-			--data-binary @"$file" > /dev/null
-
-		counter=$(($counter+1))
-		progress=$(($progress+$procent))
-		echo $progress
-		echo "# Загружено файлов $counter из $kolfile"
-	done)|zenity --progress --title="Dropbox" --auto-close --auto-kill --width=250
-
-if [ $kolfile = 1 ]
-	then path="${folder_to_upload}/${1##*/}"	# Если загружается только один файл создаем ссылку непосредственно на файл
-	else path="${folder_to_upload}"				# Если загружается несколько файлов создаем ссылку на каталог
-fi
-
-# Создаём общую ссылку
-output=`curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
-	--header "Authorization: Bearer $key" \
-	--header "Content-Type: application/json" \
-	--data "{\"path\": \"/$path\",\"settings\": {\"requested_visibility\": \"public\"}}"`
-
-# Получаем общую ссылку
-#output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
-#	--header "Authorization: Bearer $key" \
-#	--header "Content-Type: application/json" \
-#	--data "{\"path\": \"/$path\", \"direct_only\": true}"`
-
-# Вырезаем ссылку из вывода curl
-link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`
-
-# Проверяем наличие ссылки и выводим уведомление
-if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
+if [ $kolfile != 0 ]			# Проверяем были ли переданы сценарию данные
 	then
-		# Записываем ссылку в буфер обмена
-		echo -n "$link" | xclip -i -selection clipboard
-		notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
-	else
-		notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $status"
-fi
 
-# Записываем историю
-if [ "${path_for_log}" != "" ]
-	then
-		# Преобразуем список в строку
+		# Проверяем не был ли выбран каталог 
 		for file in "$@"
-			do list_files="${list_files}""$file""; "
+			do
+				if [ -d "$file" ]
+					then
+						notify-send -t 10000 -i "error" "Dropbox" "Вы выбрали каталог/и.\nДопускается загрузка только файлов."
+						exit
+				fi
 		done
 
-		ex -s -c "1i| " -c x "${path_for_log}"							# Пустая строка
-		ex -s -c "1i|$link" -c x "${path_for_log}"					# Ссылка
-		ex -s -c "1i|$list_files" -c x "${path_for_log}"			# Список файлов
-		ex -s -c "1i|${folder_to_upload}" -c x "${path_for_log}"	# Каталог с загруженными файлами
+		# Генерируем имя каталога для загрузки
+		folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`
+
+		procent=$((100/$kolfile))	# Процентов на каждый файл
+		(for file in "$@"
+			do
+				filename=${file##*/}	# Имя файла без пути
+
+				# Загружаем файл
+				curl -X POST https://content.dropboxapi.com/2/files/upload \
+					--header "Authorization: Bearer $key" \
+					--header "Dropbox-API-Arg: {\"path\": \"/${folder_to_upload}/$filename\"}" \
+					--header "Content-Type: application/octet-stream" \
+					--data-binary @"$file" > /dev/null
+
+				counter=$(($counter+1))
+				progress=$(($progress+$procent))
+				echo $progress
+				echo "# Загружено файлов $counter из $kolfile"
+			done)|zenity --progress --title="Dropbox" --auto-close --auto-kill --width=250
+
+		if [ $kolfile = 1 ]
+			then path="${folder_to_upload}/${1##*/}"	# Если загружается только один файл создаем ссылку непосредственно на файл
+			else path="${folder_to_upload}"				# Если загружается несколько файлов создаем ссылку на каталог
+		fi
+
+		# Создаём общую ссылку
+		output=`curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
+			--header "Authorization: Bearer $key" \
+			--header "Content-Type: application/json" \
+			--data "{\"path\": \"/$path\",\"settings\": {\"requested_visibility\": \"public\"}}"`
+			
+		# Получаем общую ссылку
+		#output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
+		#	--header "Authorization: Bearer $key" \
+		#	--header "Content-Type: application/json" \
+		#	--data "{\"path\": \"/$path\", \"direct_only\": true}"`
+
+		# Вырезаем ссылку из вывода curl
+		link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`
+
+		# Проверяем наличие ссылки и выводим уведомление
+		if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
+			then
+				# Записываем ссылку в буфер обмена
+				echo -n "$link" | xclip -i -selection clipboard
+				notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
+			else
+				notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $status"
+		fi
+
+		# Записываем историю
+		if [ "${path_for_log}" != "" ]
+			then
+				# Преобразуем список в строку
+				for file in "$@"
+					do list_files="${list_files}""$file""; "
+				done
+
+				ex -s -c "1i| " -c x "${path_for_log}"							# Пустая строка
+				ex -s -c "1i|$link" -c x "${path_for_log}"					# Ссылка
+				ex -s -c "1i|$list_files" -c x "${path_for_log}"			# Список файлов
+				ex -s -c "1i|${folder_to_upload}" -c x "${path_for_log}"	# Каталог с загруженными файлами
+		fi
+
+	else
+		echo
+		echo "Сценарию не были переданы элементы"
+		echo
+	fi
+
+# Удаление старых файлов
+if [ `echo "${localpath_for_app}" | grep -i "dropbox"` ]															# Для защиты проверяем содержит ли путь слово "dropbox"
+	then find ${localpath_for_app} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
 fi
