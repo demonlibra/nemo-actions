@@ -16,54 +16,44 @@
 # Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
 # Generate "OAuth 2" and insert it below
 
-key='Generate "OAuth 2" and insert it here'		# Ключ OAuth2
-path_for_log="$HOME/.dropbox_history"													# Путь для сохранения истории. Оставить пустым чтобы не сохранять историю.
+key='Generate "OAuth 2" and insert it here'		# Key OAuth2
+path_for_log="$HOME/.dropbox_history"													# Path for log file
 
-localpath_for_app="/mnt/data/Dropbox/Приложения/fast_upload/"					# Каталог синхронизации данных созданного приложения 
-days_keep=30																					# Сколько дней хранить файлы перед удалением
+localpath_for_app="/mnt/data/Dropbox/Приложения/fast_upload/"					# Dropbox local path with app folder
+days_keep=30																					# Days to keep files before delete
 
 
 ####################################################################################################
 ### ------------------------------------- Script ----------------------------------------------- ###
 
-kolfile=$#						# Количество выделенных файлов
-if [ $kolfile != 0 ]			# Проверяем были ли переданы сценарию данные
+if [ $# != 0 ]																	# Проверяем были ли переданы сценарию данные
 	then
 
-		# Проверяем не был ли выбран каталог 
-		for file in "$@"
-			do
-				if [ -d "$file" ]
-					then
-						notify-send -t 10000 -i "error" "Dropbox" "Вы выбрали каталог/и.\nДопускается загрузка только файлов."
-						exit
-				fi
-		done
+		number_files=`find "$@" -type f -print | wc -l`				# Количество выбранных файлов
+		procent=$((100/${number_files}))									# Расчитываем число процентов выполнения на каждый файл
 
-		# Генерируем имя каталога для загрузки
-		folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`
+		folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`					# Генерируем имя каталога для загрузки из текущих даты и времени
 
-		procent=$((100/$kolfile))	# Процентов на каждый файл
-		(for file in "$@"
+		find "$@" -type f -print0 | (while read -d $'\0' file
 			do
 				filename=${file##*/}	# Имя файла без пути
 
 				# Загружаем файл
 				curl -X POST https://content.dropboxapi.com/2/files/upload \
 					--header "Authorization: Bearer $key" \
-					--header "Dropbox-API-Arg: {\"path\": \"/${folder_to_upload}/$filename\"}" \
+					--header "Dropbox-API-Arg: {\"path\": \"/${folder_to_upload}/$file\"}" \
 					--header "Content-Type: application/octet-stream" \
 					--data-binary @"$file" > /dev/null
 
 				counter=$(($counter+1))
 				progress=$(($progress+$procent))
 				echo $progress
-				echo "# Загружено файлов $counter из $kolfile"
+				echo "# Загружено файлов $counter из ${number_files}"
 			done)|zenity --progress --title="Dropbox" --auto-close --auto-kill --width=250
 
-		if [ $kolfile = 1 ]
-			then path="${folder_to_upload}/${1##*/}"	# Если загружается только один файл создаем ссылку непосредственно на файл
-			else path="${folder_to_upload}"				# Если загружается несколько файлов создаем ссылку на каталог
+		if [ ${number_files} = 1 ]
+			then path="${folder_to_upload}/${1##*/}"					# Если загружается только один файл создаем ссылку непосредственно на файл
+			else path="${folder_to_upload}"								# Если загружается несколько файлов создаем ссылку на каталог
 		fi
 
 		# Создаём общую ссылку
