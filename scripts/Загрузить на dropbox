@@ -16,7 +16,7 @@
 # Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
 # Generate "OAuth 2" and insert it below
 
-key='Generate "OAuth 2" and insert it here'		# Key OAuth2
+key='Insert here key OAuth2'		# Key OAuth2
 path_for_log="$HOME/.dropbox_history"													# Path for log file
 
 localpath_for_app="/mnt/data/Dropbox/Приложения/fast_upload/"					# Dropbox local path with app folder
@@ -26,17 +26,28 @@ days_keep=30																					# Days to keep files before delete
 ####################################################################################################
 ### ------------------------------------- Script ----------------------------------------------- ###
 
-if [ $# != 0 ]																	# Проверяем были ли переданы сценарию данные
+if [ $# != 0 ]																				# Проверяем были ли переданы сценарию данные
 	then
 
-		number_files=`find "$@" -type f -print | wc -l`				# Количество выбранных файлов
-		procent=$((100/${number_files}))									# Расчитываем число процентов выполнения на каждый файл
+		number_files=`find "$@" -type f -print | wc -l`							# Количество выбранных файлов
 
-		folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`					# Генерируем имя каталога для загрузки из текущих даты и времени
-
-		find "$@" -type f -print0 | (while read -d $'\0' file
+		for ADD in $( find "$@" -type f -exec stat '--printf=%s ' {} \; )	# Расчитываем суммарный объём
 			do
-				filename=${file##*/}	# Имя файла без пути
+    			total_size=$(( ${total_size} + $ADD ))
+			done
+		if [ $total_size -lt 1024 ]													# Выбираем единицы для отображения общего объема в прогрессе
+			then total_size_print=$total_size" байт"
+		elif [ $total_size -lt 1048576 ]
+			then total_size_print=$(( $total_size /1024 ))" Кбайт"
+		elif [ $total_size -lt 1073741824  ]
+			then total_size_print=$(( $total_size /1024/1024 ))" Мбайт"
+		fi
+
+		folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`								# Генерируем имя каталога для загрузки из текущих даты и времени
+
+		find "$@" -type f -print0 | (while read -d $'\0' file					# Получаем список и обрабатываем выбранные файлы 
+			do
+				filename=${file##*/}														# Имя файла без пути
 
 				# Загружаем файл
 				curl -X POST https://content.dropboxapi.com/2/files/upload \
@@ -45,15 +56,27 @@ if [ $# != 0 ]																	# Проверяем были ли передан
 					--header "Content-Type: application/octet-stream" \
 					--data-binary @"$file" > /dev/null
 
+				
+				file_size=`stat --printf=%s "$file"`								# Получение размера файла
+				uploaded_size=$(( ${uploaded_size} + ${file_size} ))			# Расчёт загруженного объема
+				if [ $uploaded_size -lt 1024 ]										# Выбираем единицы для отображения загруженного в прогрессе
+					then uploaded_size_print=$uploaded_size" байт"
+				elif [ $uploaded_size -lt 1048576 ]
+					then uploaded_size_print=$(( $uploaded_size /1024 ))" Кбайт"
+				elif [ $uploaded_size -lt 1073741824  ]
+					then uploaded_size_print=$(( $uploaded_size /1024/1024 ))" Мбайт"
+				fi
+
+				#progress=$(( $progress + 100/${number_files} ))				# Расчет прогресса по количеству загруженных файлов
+				progress=$(( 100 * $uploaded_size / $total_size ))				# Расчет прогресса по загруженному объему
 				counter=$(($counter+1))
-				progress=$(($progress+$procent))
 				echo $progress
-				echo "# Загружено файлов $counter из ${number_files}"
+				echo "# Загружено файлов $counter из ${number_files}\n${uploaded_size_print} из ${total_size_print}"
 			done)|zenity --progress --title="Dropbox" --auto-close --auto-kill --width=250
 
 		if [ ${number_files} = 1 ]
-			then path="${folder_to_upload}/${1##*/}"					# Если загружается только один файл создаем ссылку непосредственно на файл
-			else path="${folder_to_upload}"								# Если загружается несколько файлов создаем ссылку на каталог
+			then path="${folder_to_upload}/${1##*/}"								# Если загружается только один файл создаем ссылку непосредственно на файл
+			else path="${folder_to_upload}"											# Если загружается несколько файлов создаем ссылку на каталог
 		fi
 
 		# Создаём общую ссылку
@@ -61,21 +84,18 @@ if [ $# != 0 ]																	# Проверяем были ли передан
 			--header "Authorization: Bearer $key" \
 			--header "Content-Type: application/json" \
 			--data "{\"path\": \"/$path\",\"settings\": {\"requested_visibility\": \"public\"}}"`
-			
+
 		# Получаем общую ссылку
 		#output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
 		#	--header "Authorization: Bearer $key" \
 		#	--header "Content-Type: application/json" \
 		#	--data "{\"path\": \"/$path\", \"direct_only\": true}"`
-
-		# Вырезаем ссылку из вывода curl
-		link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`
-
+		echo $output
 		# Проверяем наличие ссылки и выводим уведомление
-		if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
+		if [[ `echo "$output" | grep "https://www.dropbox.com/"` ]]
 			then
-				# Записываем ссылку в буфер обмена
-				echo -n "$link" | xclip -i -selection clipboard
+				link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`	# Вырезаем ссылку из вывода curl
+				echo -n "$link" | xclip -i -selection clipboard						# Записываем ссылку в буфер обмена
 				notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
 			else
 				notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $status"
@@ -89,10 +109,34 @@ if [ $# != 0 ]																	# Проверяем были ли передан
 					do list_files="${list_files}""$file""; "
 				done
 
-				ex -s -c "1i| " -c x "${path_for_log}"							# Пустая строка
-				ex -s -c "1i|$link" -c x "${path_for_log}"					# Ссылка
-				ex -s -c "1i|$list_files" -c x "${path_for_log}"			# Список файлов
-				ex -s -c "1i|${folder_to_upload}" -c x "${path_for_log}"	# Каталог с загруженными файлами
+				ex -s -c "1i| " -c x "${path_for_log}"							# Добавляем в файл истории пустую строку
+				ex -s -c "1i|$link" -c x "${path_for_log}"					# Добавляем в файл истории ссылку
+				ex -s -c "1i|$list_files" -c x "${path_for_log}"			# Добавляем в файл истории список файлов
+				ex -s -c "1i|${folder_to_upload}" -c x "${path_for_log}"	# Добавляем в файл истории имя каталог с загруженными файлами
+		fi
+
+		# Очищаем файл истории
+		cat ${path_for_log} | while read line
+			 do
+				row_number=$(( $row_number + 1 ))
+
+				data_from_file=`expr substr "$line" 1 10`												# Вырезаем часть строки для получения даты
+				if [[ "${data_from_file}" == $(date -d "${data_from_file}" "+%Y-%m-%d" 2>/dev/null) ]]		# Если строка является датой в указанном формате
+					then
+						 data_check=$(date +%Y-%m-%d -d "- ${days_keep} days")
+						 if [[ "$data_check" > "${data_from_file}" ]]
+							 then
+								  head -n $(($row_number-1)) ${path_for_log} > /tmp/${path_for_log##*/}
+								  mv /tmp/${path_for_log##*/} ${path_for_log}
+								  echo "DELETE FROM $row_number"
+								  exit
+						 fi
+				fi
+			 done
+			 
+		# Удаляем старые файлы
+		if [ `echo "${localpath_for_app}" | grep -i "dropbox"` ]															# Для защиты проверяем содержит ли путь слово "dropbox"
+			then find ${localpath_for_app} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
 		fi
 
 	else
@@ -101,7 +145,3 @@ if [ $# != 0 ]																	# Проверяем были ли передан
 		echo
 	fi
 
-# Удаление старых файлов
-if [ `echo "${localpath_for_app}" | grep -i "dropbox"` ]															# Для защиты проверяем содержит ли путь слово "dropbox"
-	then find ${localpath_for_app} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
-fi
