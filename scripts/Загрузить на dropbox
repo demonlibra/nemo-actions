@@ -16,10 +16,13 @@
 # Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
 # Generate "OAuth 2" and insert it below
 
-key='Insert here key OAuth2'		# Key OAuth2
+key='Insert here OAuth2 key'		# Key OAuth2
 path_for_log="$HOME/.dropbox_history"													# Path for log file
 
+remote_path="/Приложения/fast_upload"													# Dropbox remote path with app folder
 localpath_for_app="/mnt/data/Dropbox/Приложения/fast_upload/"					# Dropbox local path with app folder
+path_to_dbxcli="$HOME/app/dbxcli/dbxcli"												# Path to dbxcli (https://github.com/dropbox/dbxcli)
+
 days_keep=30																					# Days to keep files before delete
 
 
@@ -85,12 +88,13 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 			--header "Content-Type: application/json" \
 			--data "{\"path\": \"/$path\",\"settings\": {\"requested_visibility\": \"public\"}}"`
 
-		# Получаем общую ссылку
+		# Получаем общую ссылку созданную ранее. Не требуется так как ссылка передаётся при создании выше.
 		#output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
 		#	--header "Authorization: Bearer $key" \
 		#	--header "Content-Type: application/json" \
 		#	--data "{\"path\": \"/$path\", \"direct_only\": true}"`
 		echo $output
+		
 		# Проверяем наличие ссылки и выводим уведомление
 		if [[ `echo "$output" | grep "https://www.dropbox.com/"` ]]
 			then
@@ -114,30 +118,46 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 				ex -s -c "1i|$list_files" -c x "${path_for_log}"			# Добавляем в файл истории список файлов
 				ex -s -c "1i|${folder_to_upload}" -c x "${path_for_log}"	# Добавляем в файл истории имя каталог с загруженными файлами
 		fi
-
+		
+		# Удаляем старые файлы на сервере
+		if [ -f "${path_to_dbxcli}" ]
+			then
+				"${path_to_dbxcli}" ls -l ${remote_path} | while read line # Получаем список каталогов
+					do
+						data_from_server="${line##*/}"
+						if [[ "${data_from_server:0:10}" == $(date -d "${data_from_server:0:10}" "+%Y-%m-%d" 2>/dev/null) ]]	# Если строка является датой в указанном формате
+							then
+								data_check=$(date +%Y-%m-%d_%H-%M-%S -d "- ${days_keep} days")
+								if [[ "$data_check" > "${data_from_server}" ]]
+									then "${path_to_dbxcli}" rm --force "${remote_path}/${data_from_server}"	
+								fi
+						fi
+					done
+			else
+				# Удаляем старые файлы локально
+				if [ `echo "${localpath_for_app}" | grep -i "dropbox"` ]														# Для защиты проверяем содержит ли путь слово "dropbox"
+					then find ${localpath_for_app} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
+				fi
+		fi
+			
 		# Очищаем файл истории
 		cat ${path_for_log} | while read line
 			 do
 				row_number=$(( $row_number + 1 ))
+				data_from_file=`expr substr "$line" 1 11`						# Вырезаем часть строки для получения даты
 
-				data_from_file=`expr substr "$line" 1 10`												# Вырезаем часть строки для получения даты
 				if [[ "${data_from_file}" == $(date -d "${data_from_file}" "+%Y-%m-%d" 2>/dev/null) ]]		# Если строка является датой в указанном формате
 					then
 						 data_check=$(date +%Y-%m-%d -d "- ${days_keep} days")
 						 if [[ "$data_check" > "${data_from_file}" ]]
 							 then
-								  head -n $(($row_number-1)) ${path_for_log} > /tmp/${path_for_log##*/}
-								  mv /tmp/${path_for_log##*/} ${path_for_log}
-								  echo "DELETE FROM $row_number"
-								  exit
+							 	echo $data_from_file
+								head -n $(($row_number-1)) ${path_for_log} > /tmp/${path_for_log##*/}
+								mv /tmp/${path_for_log##*/} ${path_for_log}
+								echo "DELETE FROM $row_number"
 						 fi
 				fi
 			 done
-			 
-		# Удаляем старые файлы
-		if [ `echo "${localpath_for_app}" | grep -i "dropbox"` ]															# Для защиты проверяем содержит ли путь слово "dropbox"
-			then find ${localpath_for_app} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
-		fi
 
 	else
 		echo
