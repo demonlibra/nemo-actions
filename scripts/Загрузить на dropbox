@@ -16,12 +16,12 @@
 # Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
 # Generate "OAuth 2" and insert it below
 
-key='Insert here OAuth2 key'		# Key OAuth2
-path_for_log="$HOME/.dropbox_history"													# Path for log file
+key='Insert here OAuth2 key'																# Key OAuth2
+path_for_log="$HOME/.dropbox_history"													# Path for log file. Keep it clear if you don`t want to save log.
 
 remote_path="/Приложения/fast_upload"													# Dropbox remote path with app folder
-localpath_for_app="/mnt/data/Dropbox/Приложения/fast_upload/"					# Dropbox local path with app folder
-path_to_dbxcli="$HOME/app/dbxcli/dbxcli"												# Path to dbxcli (https://github.com/dropbox/dbxcli)
+local_path="/mnt/data/Dropbox/Приложения/fast_upload/"							# Dropbox local path with app folder
+path_to_dbxcli="$HOME/app/dbxcli/dbxcli"												# Path to dbxcli (https://github.com/dropbox/dbxcli). Used for delete files from dropbox server directly.
 
 days_keep=30																					# Days to keep files before delete
 
@@ -31,12 +31,11 @@ days_keep=30																					# Days to keep files before delete
 
 if [ $# != 0 ]																				# Проверяем были ли переданы сценарию данные
 	then
-
 		number_files=`find "$@" -type f -print | wc -l`							# Количество выбранных файлов
 
 		for ADD in $( find "$@" -type f -exec stat '--printf=%s ' {} \; )	# Расчитываем суммарный объём
 			do
-    			total_size=$(( ${total_size} + $ADD ))
+				total_size=$(( ${total_size} + $ADD ))
 			done
 		if [ $total_size -lt 1024 ]													# Выбираем единицы для отображения общего объема в прогрессе
 			then total_size_print=$total_size" байт"
@@ -47,19 +46,17 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 		fi
 
 		folder_to_upload=`date +%Y-%m-%d_%H-%M-%S`								# Генерируем имя каталога для загрузки из текущих даты и времени
+		echo; echo ${folder_to_upload}; echo
 
 		find "$@" -type f -print0 | (while read -d $'\0' file					# Получаем список и обрабатываем выбранные файлы 
 			do
-				filename=${file##*/}														# Имя файла без пути
-
 				# Загружаем файл
 				curl -X POST https://content.dropboxapi.com/2/files/upload \
 					--header "Authorization: Bearer $key" \
 					--header "Dropbox-API-Arg: {\"path\": \"/${folder_to_upload}/$file\"}" \
 					--header "Content-Type: application/octet-stream" \
 					--data-binary @"$file" > /dev/null
-
-				
+		
 				file_size=`stat --printf=%s "$file"`								# Получение размера файла
 				uploaded_size=$(( ${uploaded_size} + ${file_size} ))			# Расчёт загруженного объема
 				if [ $uploaded_size -lt 1024 ]										# Выбираем единицы для отображения загруженного в прогрессе
@@ -72,15 +69,16 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 
 				#progress=$(( $progress + 100/${number_files} ))				# Расчет прогресса по количеству загруженных файлов
 				progress=$(( 100 * $uploaded_size / $total_size ))				# Расчет прогресса по загруженному объему
-				counter=$(($counter+1))
+				counter=$(( $counter + 1 ))
 				echo $progress
 				echo "# Загружено файлов $counter из ${number_files}\n${uploaded_size_print} из ${total_size_print}"
 			done)|zenity --progress --title="Dropbox" --auto-close --auto-kill --width=250
 
 		if [ ${number_files} = 1 ]
-			then path="${folder_to_upload}/${1##*/}"								# Если загружается только один файл создаем ссылку непосредственно на файл
-			else path="${folder_to_upload}"											# Если загружается несколько файлов создаем ссылку на каталог
+			then path="${folder_to_upload}/$1"										# Если загружается только один файл, создаем ссылку непосредственно на файл
+			else path="${folder_to_upload}"											# Если загружается несколько файлов, создаем ссылку на каталог
 		fi
+		echo; echo "path = ${folder_to_upload}/$file"; echo
 
 		# Создаём общую ссылку
 		output=`curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
@@ -93,12 +91,13 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 		#	--header "Authorization: Bearer $key" \
 		#	--header "Content-Type: application/json" \
 		#	--data "{\"path\": \"/$path\", \"direct_only\": true}"`
-		echo $output
+		echo; echo $output; echo
 		
 		# Проверяем наличие ссылки и выводим уведомление
 		if [[ `echo "$output" | grep "https://www.dropbox.com/"` ]]
 			then
 				link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`	# Вырезаем ссылку из вывода curl
+				echo; echo "link = $link"; echo
 				echo -n "$link" | xclip -i -selection clipboard						# Записываем ссылку в буфер обмена
 				notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
 			else
@@ -120,14 +119,14 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 		fi
 		
 		# Удаляем старые файлы на сервере
-		if [ -f "${path_to_dbxcli}" ]
+		if [ -f "${path_to_dbxcli}" ]																								# Если присутствует dbxcli
 			then
-				"${path_to_dbxcli}" ls -l ${remote_path} | while read line # Получаем список каталогов
+				"${path_to_dbxcli}" ls -l ${remote_path} | while read line												# Получаем список каталогов
 					do
-						data_from_server="${line##*/}"
+						data_from_server="${line##*/}"																			# Получаем путь из строки
 						if [[ "${data_from_server:0:10}" == $(date -d "${data_from_server:0:10}" "+%Y-%m-%d" 2>/dev/null) ]]	# Если строка является датой в указанном формате
 							then
-								data_check=$(date +%Y-%m-%d_%H-%M-%S -d "- ${days_keep} days")
+								data_check=$(date +%Y-%m-%d_%H-%M-%S -d "- ${days_keep} days")							# Вычисляем дату после которой необходимо удалять старые файлы
 								if [[ "$data_check" > "${data_from_server}" ]]
 									then "${path_to_dbxcli}" rm --force "${remote_path}/${data_from_server}"	
 								fi
@@ -135,33 +134,31 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 					done
 			else
 				# Удаляем старые файлы локально
-				if [ `echo "${localpath_for_app}" | grep -i "dropbox"` ]														# Для защиты проверяем содержит ли путь слово "dropbox"
-					then find ${localpath_for_app} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
+				if [ `echo "${local_path}" | grep -i "dropbox"` ]															# Для защиты проверяем содержит ли путь слово "dropbox"
+					then find ${local_path} -mtime +${days_keep} -type d -exec rm --force --recursive {} \;	# Удаляем старые каталоги
 				fi
 		fi
 			
 		# Очищаем файл истории
-		cat ${path_for_log} | while read line
+		cat ${path_for_log} | while read line									# Считываем файл log построчно
 			 do
-				row_number=$(( $row_number + 1 ))
+				row_number=$(( $row_number + 1 ))								# Счтаем номера строк
 				data_from_file=`expr substr "$line" 1 11`						# Вырезаем часть строки для получения даты
 
 				if [[ "${data_from_file}" == $(date -d "${data_from_file}" "+%Y-%m-%d" 2>/dev/null) ]]		# Если строка является датой в указанном формате
 					then
-						 data_check=$(date +%Y-%m-%d -d "- ${days_keep} days")
-						 if [[ "$data_check" > "${data_from_file}" ]]
-							 then
-							 	echo $data_from_file
+						data_check=$(date +%Y-%m-%d -d "- ${days_keep} days")
+						if [[ "$data_check" > "${data_from_file}" ]]
+							then
+								echo $data_from_file
 								head -n $(($row_number-1)) ${path_for_log} > /tmp/${path_for_log##*/}
 								mv /tmp/${path_for_log##*/} ${path_for_log}
-								echo "DELETE FROM $row_number"
-						 fi
+								echo; echo "From log deleted rows below $row_number"; echo
+								exit
+						fi
 				fi
-			 done
+			done
 
 	else
-		echo
-		echo "Сценарию не были переданы элементы"
-		echo
+		echo; echo "Сценарию не были переданы элементы"; echo
 	fi
-
