@@ -20,7 +20,7 @@ key='Insert here OAuth2 key'																# Key OAuth2
 path_for_log="$HOME/.dropbox_history"													# Path for log file. Keep it clear if you don`t want to save log.
 
 remote_path="/Приложения/fast_upload"													# Dropbox remote path with app folder
-local_path="/mnt/data/Dropbox/Приложения/fast_upload/"							# Dropbox local path with app folder
+local_path="/mnt/data/Dropbox/Приложения/fast_upload"							# Dropbox local path with app folder
 path_to_dbxcli="$HOME/app/dbxcli/dbxcli"												# Path to dbxcli (https://github.com/dropbox/dbxcli). Used for delete files from dropbox server directly.
 
 days_keep=30																					# Days to keep files before delete
@@ -56,7 +56,11 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 					--header "Dropbox-API-Arg: {\"path\": \"/${folder_to_upload}/$file\"}" \
 					--header "Content-Type: application/octet-stream" \
 					--data-binary @"$file" > /dev/null
-		
+
+				# Копируем файл в локальную папку
+				mkdir "${local_path}/${folder_to_upload}"
+				cp "$file" "${local_path}/${folder_to_upload}/$file"
+				
 				file_size=`stat --printf=%s "$file"`								# Получение размера файла
 				uploaded_size=$(( ${uploaded_size} + ${file_size} ))			# Расчёт загруженного объема
 				if [ $uploaded_size -lt 1024 ]										# Выбираем единицы для отображения загруженного в прогрессе
