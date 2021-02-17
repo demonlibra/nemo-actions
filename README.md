@@ -73,7 +73,6 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**docs_to_pdf_unoconv**|Преобразовать документы в PDF с помощью unoconv и libreoffice|
 |**doublecmd**|Открыть выбранный каталог в DoubleCommander|
 |**dwgdxf_convert**|Преобразовать чертеж в изображение или pdf средствами QCAD|
-|**firefoxsend**|Загрузить на Firefox Send|
 |**gpg_encrypt**|Расшифровать файл gpg|
 |**hash**|Вычислить хэш-суммы MD5 или SHAх|
 |**image_compress**|Сжать изображения|
@@ -123,7 +122,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |Файл|
 |---|
 |**Безвозвратное удаление**|
-|**Загрузить на firefoxsend**|
+|**Загрузить на dropbox**|
 |**Загрузить на transfersh**|
 |**Загрузить на wetransfer**|
 |**Контрольная сумма**|
