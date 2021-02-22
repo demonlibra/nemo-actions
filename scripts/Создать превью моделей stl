@@ -38,7 +38,7 @@ if [ $? = 0 ]
 				echo "import(\"${filename}\");" > "${file%.*}".scad
 
 				#Экспорт в png при помощи openSCAD
-				openscad -q -o "${file%.*}.png" $camera --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad" > /dev/null
+				openscad -q -o "${file%.*}.png" --render $camera --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad" > /dev/null
 
 				if [ $format != "png" ]
 					then

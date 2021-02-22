@@ -41,7 +41,7 @@ if [ $? = 0 ]
 				echo "import(\"${file}\");" > "${file%.*}.scad"
 
 				# Экспорт в png при помощи openSCAD
-				openscad -o "${file%.*}.png" $camera --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad"
+				openscad -o "${file%.*}.png" --render $camera --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad"
 
 				# Удаление временного файла
 				rm "${file%.*}.scad"

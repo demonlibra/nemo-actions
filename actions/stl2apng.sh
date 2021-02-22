@@ -23,34 +23,44 @@ if [ -z "`dpkg -l | grep apng2gif`" ]
 fi
 
 AAA=`yad --borders=10 --title="stl 2 apng" --text="Создание анимации из stl" --text-align=center --form --item-separator="|" \
---field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Вращать вокруг оси:CB" --field="Угол поворота оси за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" \
-		"" 					600										600				"ortho|perspective" 					"0,0,0" 									TRUE 							"500"										TRUE											40										0											40										"X|Y|Z"									10														"1 5"								FALSE											TRUE`
+--field=:LBL --field="Ширина изображения" --field="Высота изображения" 	--field="Цветовая схема:CB" 													--field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Вращать вокруг оси:CB" --field="Угол поворота оси за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" \
+		"" 					600										600			 	"^Cornfield|Sunset|Metallic|Starnight|BeforeDawn|Nature|Случайная"	"ortho|perspective" 					"0,0,0" 									TRUE 							"500"										TRUE											40										0											40										"X|Y|Z"									10														"1 5"								FALSE											TRUE`
 
 if [ $? = 0 ]
 	then
 		width=$( echo $AAA | awk -F '|' '{print $2}')
 		height=$( echo $AAA | awk -F '|' '{print $3}')
+		
+		colorscheme[7]=$( echo $AAA | awk -F '|' '{print $4}')
+		
+		projection=$( echo $AAA | awk -F '|' '{print $5}')
 
-		projection=$( echo $AAA | awk -F '|' '{print $4}')
-
-		trans=$( echo $AAA | awk -F '|' '{print $5}')
-		autocenter=$( echo $AAA | awk -F '|' '{print $6}')
+		trans=$( echo $AAA | awk -F '|' '{print $6}')
+		autocenter=$( echo $AAA | awk -F '|' '{print $7}')
 		if [ $autocenter = "TRUE" ]; then autocenter='--autocenter'; else autocenter=''; fi
 
-		distance=$( echo $AAA | awk -F '|' '{print $7}')
-		viewall=$( echo $AAA | awk -F '|' '{print $8}')
+		distance=$( echo $AAA | awk -F '|' '{print $8}')
+		viewall=$( echo $AAA | awk -F '|' '{print $9}')
 		if [ $viewall = "TRUE" ]; then viewall='--viewall'; else viewall=''; fi
 
-		x_degree=$( echo $AAA | awk -F '|' '{print $9}')
-		y_degree=$( echo $AAA | awk -F '|' '{print $10}')
-		z_degree=$( echo $AAA | awk -F '|' '{print $11}')
-		rotate_axis=$( echo $AAA | awk -F '|' '{print $12}')
-		degree_step=$( echo $AAA | awk -F '|' '{print $13}')
-		delay=$( echo $AAA | awk -F '|' '{print $14}')
+		x_degree=$( echo $AAA | awk -F '|' '{print $10}')
+		y_degree=$( echo $AAA | awk -F '|' '{print $11}')
+		z_degree=$( echo $AAA | awk -F '|' '{print $12}')
+		rotate_axis=$( echo $AAA | awk -F '|' '{print $13}')
+		degree_step=$( echo $AAA | awk -F '|' '{print $14}')
+		delay=$( echo $AAA | awk -F '|' '{print $15}')
 
-		out_png=$( echo $AAA | awk -F '|' '{print $15}')
-		out_gif=$( echo $AAA | awk -F '|' '{print $16}')
+		out_png=$( echo $AAA | awk -F '|' '{print $16}')
+		out_gif=$( echo $AAA | awk -F '|' '{print $17}')
 
+		colorscheme[0]=Cornfield
+		colorscheme[1]=Sunset
+		colorscheme[2]=Metallic
+		colorscheme[3]=Starnight
+		colorscheme[4]=BeforeDawn
+		colorscheme[5]=Nature
+		colorscheme[6]=DeepOcean
+		
 		# Количество файлов stl
 		number=`find "$@" -type f -iname "*.stl" -print | wc -l`
 		
@@ -60,6 +70,15 @@ if [ $? = 0 ]
 		#Поиск файлов STL и формирование списка
 		find "$@" -type f -iname "*.stl" -print0 | (while read -d $'\0' file
 			do
+				# Случайный выбор цветовой схемы
+				if [ "${colorscheme[7]}" = "Случайная" ]
+					then
+						color_number=`shuf -i 0-6 -n 1`
+						color_scheme=${colorscheme[$color_number]}
+					else
+						color_scheme="${colorscheme[7]}"
+				fi
+
 				# Время начала обработки файлы STL
 				Start_Time=$(date +%s)
 				
@@ -80,9 +99,9 @@ if [ $? = 0 ]
 							then y_degree=$(($y_degree+$degree_step))
 						elif [ "$rotate_axis" == "Z" ]
 							then z_degree=$(($z_degree+$degree_step))
-							fi
+						fi
 						name="$tmp/frame"`printf "%03d" $step`".png"
-						openscad -o "$name" --camera=$trans,${x_degree},${y_degree},${z_degree},$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad" > /dev/null
+						openscad -o "$name" --render --colorscheme=${color_scheme} --camera=$trans,${x_degree},${y_degree},${z_degree},$distance --projection=$projection $autocenter $viewall --imgsize=$width,$height "${file%.*}.scad" > /dev/null
 					done
 
 				# Объединение кадров в apng
@@ -91,15 +110,15 @@ if [ $? = 0 ]
 				# Создание файла в формате gif
 				if [ $out_gif = "TRUE" ]
 					then
-						apng2gif "$tmp/${filename%.*}.png" "${filename%.*}.gif" > /dev/null
-						mv "${filename%.*}.gif" "${file%.*}.gif" > /dev/null
-					fi
+						apng2gif "$tmp/${filename%.*}.png" "$tmp/${filename%.*}.gif" > /dev/null
+						mv "$tmp/${filename%.*}.gif" "${file%.*}.gif" > /dev/null
+				fi
 
 				# Перенос файла в формате apng
 				if [ $out_png = "TRUE" ]
 					then mv "$tmp/${filename%.*}.png" "${file%.*}.png" > /dev/null
 					else rm "$tmp/${filename%.*}.png" > /dev/null
-					fi
+				fi
 
 				# Удаление кадров
 				rm "$tmp/frame"*".png"
