@@ -30,7 +30,14 @@ if [ $? = 0 ]
 	then
 		width=$( echo $AAA | awk -F '|' '{print $2}')
 		height=$( echo $AAA | awk -F '|' '{print $3}')
-		
+
+		colorscheme[0]=Cornfield
+		colorscheme[1]=Sunset
+		colorscheme[2]=Metallic
+		colorscheme[3]=Starnight
+		colorscheme[4]=BeforeDawn
+		colorscheme[5]=Nature
+		colorscheme[6]=DeepOcean
 		colorscheme[7]=$( echo $AAA | awk -F '|' '{print $4}')
 		
 		projection=$( echo $AAA | awk -F '|' '{print $5}')
@@ -52,14 +59,6 @@ if [ $? = 0 ]
 
 		out_png=$( echo $AAA | awk -F '|' '{print $16}')
 		out_gif=$( echo $AAA | awk -F '|' '{print $17}')
-
-		colorscheme[0]=Cornfield
-		colorscheme[1]=Sunset
-		colorscheme[2]=Metallic
-		colorscheme[3]=Starnight
-		colorscheme[4]=BeforeDawn
-		colorscheme[5]=Nature
-		colorscheme[6]=DeepOcean
 		
 		# Количество файлов stl
 		number=`find "$@" -type f -iname "*.stl" -print | wc -l`
