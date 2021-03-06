@@ -17,13 +17,13 @@
 # Generate "OAuth 2" and insert it below
 
 key='Insert here OAuth2 key'																# Key OAuth2
-path_for_log="$HOME/.dropbox_history"													# Path for log file. Keep it clear if you don`t want to save log.
+path_for_log="$HOME/Dropbox/.dropbox_history"													# Path for log file. Keep it clear if you don`t want to save log.
 
 remote_path="/Приложения/fast_upload"													# Dropbox remote path with app folder
-local_path="/mnt/data/Dropbox/Приложения/fast_upload"							# Dropbox local path with app folder
+local_path="$HOME/Dropbox/Приложения/fast_upload"							# Dropbox local path with app folder
 path_to_dbxcli="$HOME/app/dbxcli/dbxcli"												# Path to dbxcli (https://github.com/dropbox/dbxcli). Used for delete files from dropbox server directly.
 
-days_keep=30																					# Days to keep files before delete
+days_keep=90																					# Days to keep files before delete
 
 
 ####################################################################################################
@@ -33,7 +33,7 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 	then
 		number_files=`find "$@" -type f -print | wc -l`							# Количество выбранных файлов
 
-		for ADD in $( find "$@" -type f -exec stat '--printf=%s ' {} \; )	# Расчитываем суммарный объём
+		for ADD in $( find "$@" -type f -exec stat '--printf=%s ' {} \; )	# Рассчитываем суммарный объём
 			do
 				total_size=$(( ${total_size} + $ADD ))
 			done
@@ -59,8 +59,11 @@ if [ $# != 0 ]																				# Проверяем были ли перед�
 
 				# Копируем файл в локальную папку
 				mkdir "${local_path}/${folder_to_upload}"
-				cp "$file" "${local_path}/${folder_to_upload}/$file"
-				
+				if [[ `echo "$file" | grep "/"` ]]
+					then cp --parents "$file" "${local_path}/${folder_to_upload}/"
+					else cp "$file" "${local_path}/${folder_to_upload}/$file"
+				fi
+
 				file_size=`stat --printf=%s "$file"`								# Получение размера файла
 				uploaded_size=$(( ${uploaded_size} + ${file_size} ))			# Расчёт загруженного объема
 				if [ $uploaded_size -lt 1024 ]										# Выбираем единицы для отображения загруженного в прогрессе
