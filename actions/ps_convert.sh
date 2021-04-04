@@ -7,7 +7,7 @@ ext=${fullpathname##*.}
 
 #Проверка установки пакета yad
 if [ -z "`dpkg -l | grep yad`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета yad" -- bash -c "echo \"yad не установлен\"; echo ; sudo apt install yad; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета yad" -e bash -c "echo \"yad не установлен\"; echo ; sudo apt install yad; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
 AAA=`yad --title="Преобразование ps" --width=350 --borders=10 --form --separator="," --form --field=:LBL --field="Конвертировать в PDF:CHK" --field="Конвертировать в PNG:CHK" --field="Разрешение файла PNG:NUM" "" "TRUE" "FALSE" "600"`

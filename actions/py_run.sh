@@ -14,5 +14,5 @@ if [ $terminal = "true" ]
 		python3 "$fullpathname"
 	else
 		#Запуск через терминал
-		gnome-terminal --hide-menubar --default-working-directory="$path" -e "python $fullpathname"
+		x-terminal-emulator --hide-menubar --default-working-directory="$path" -e "python $fullpathname"
 fi

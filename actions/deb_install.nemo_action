@@ -11,7 +11,7 @@ Comment=Установить пакет deb в терминале утилито
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета %N" -- bash -c "sudo dpkg -i \"%F\"; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+Exec=x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета %N" -e bash -c "sudo dpkg -i \"%F\"; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 
 # Icon name to use in the menu - must be a theme icon name
 Icon-Name=deb

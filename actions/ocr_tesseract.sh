@@ -2,7 +2,7 @@
 
 #Проверка установки пакета tesseract
 if [ -z "`dpkg -l | grep tesseract`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета tesseract" -- bash -c "echo \"tesseracr не установлен\"; echo ; sudo apt install tesseract-ocr tesseract-ocr-rus; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета tesseract" -e bash -c "echo \"tesseracr не установлен\"; echo ; sudo apt install tesseract-ocr tesseract-ocr-rus; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
 fullpathname=$@

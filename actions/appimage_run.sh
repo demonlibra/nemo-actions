@@ -23,7 +23,7 @@ terminal=`zenity --question --title="AppImage" --width=150 --text="Запуст�
 
 if [ $? = 0 ]
 	then
-		gnome-terminal --title="$name" --hide-menubar --default-working-directory="$app_dir" -e "./$name"		#Запуск через терминал
+		x-terminal-emulator --title="$name" --hide-menubar --default-working-directory="$app_dir" -e "./$name"		#Запуск через терминал
 	else
 		./$name																									#Запуск без терминала
 fi

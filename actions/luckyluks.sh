@@ -6,6 +6,6 @@ if ! [ -d "$path_mount" ]
 		mkdir "$path_mount"
 	fi
 
-gnome-terminal -- bash -c "sudo cryptsetup luksOpen $path volume2; sudo mount /dev/mapper/volume2 \"$path_mount\"; read -p \"Нажмите ENTER чтобы закрыть окно и отмонтировать контейнер\"; sudo umount -l \"$path_mount\"; sudo cryptsetup luksClose volume2"
+x-terminal-emulator -e bash -c "sudo cryptsetup luksOpen $path volume2; sudo mount /dev/mapper/volume2 \"$path_mount\"; read -p \"Нажмите ENTER чтобы закрыть окно и отмонтировать контейнер\"; sudo umount -l \"$path_mount\"; sudo cryptsetup luksClose volume2"
 
 

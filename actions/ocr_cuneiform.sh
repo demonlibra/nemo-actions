@@ -2,7 +2,7 @@
 
 #Проверка установки пакета cuneiform
 if [ -z "`dpkg -l | grep cuneiform`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета cuneiform" -- bash -c "echo \"cuneiform не установлен\"; echo ; sudo apt install cuneiform; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета cuneiform" -e bash -c "echo \"cuneiform не установлен\"; echo ; sudo apt install cuneiform; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
 fullpathname=$@

@@ -11,7 +11,7 @@ Comment=Преобразовать документы в PDF с помощью u
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=unoconv -T 20 -f pdf %F
+Exec=unoconv --timeout 20 --format pdf %F
 
 # What type selection: [s]ingle, [m]ultiple, any, notnone, none (background click), or
 # a number representing how many files must be selected to display.
@@ -27,7 +27,7 @@ Selection=notnone
 # Individual specific extensions can be a semicolon-terminated list
 # Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
-Extensions=csv;doc;docx;html;rtf;txt;odt;xls;xlsx;ods;ppt;
+Extensions=csv;doc;docx;html;rtf;txt;odt;xls;xlsx;ods;ppt;odg
 
 # What mime-types to display on - this is an array, end with a semicolon
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****

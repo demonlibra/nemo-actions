@@ -16,13 +16,13 @@ if [[ ! -x "${path_wtclient}" ]]
 		exit
 fi
 
-first_element=$1														#Первый элементы переданный сценарию
-path=$PWD																#Путь к элементам
-timestamp=`date +%Y-%m-%d_%H-%M`									#Имя будущего архива по умолчанию
+first_element=$1								#Первый элементы переданный сценарию
+path=$PWD										#Путь к элементам
+timestamp=`date +%Y-%m-%d_%H-%M`				#Имя будущего архива по умолчанию
 
 
 if [[ -d $first_element ]]												
-	then archive_list="^zip|tgz|7z"								#Если выделен каталог предлагать только варианты с архивированием, т.к. wetransfer не поддерживает загрузку каталогов
+	then archive_list="^zip|tgz|7z"				#Если выделен каталог предлагать только варианты с архивированием, т.к. wetransfer не поддерживает загрузку каталогов
 	else archive_list="^нет|zip|tgz|7z"
 fi
 
@@ -39,28 +39,27 @@ if [ $? = 0 ]
 		
 		if [[ "$packing" != "нет" ]]
 			then	
-				cd "$path"																												#Переходим в каталог с элементами (чтобы не сохранять полные пути)
+				cd "$path"																						#Переходим в каталог с элементами (чтобы не сохранять полные пути)
 				
 				if [[ "$packing" = "zip" ]]
 					then
 						if [[ "$password" != "" ]]
-							then archive=`zip -r -P "$password" "${full_name_archive}.zip" "${@##*/}"`				#Создаем архив zip с шифрованием
-							else archive=`zip -r "${full_name_archive}.zip" "${@##*/}"`									#Создаем архив zip без шифрования
+							then archive=`zip -r -P "$password" "${full_name_archive}.zip" "${@##*/}"`			#Создаем архив zip с шифрованием
+							else archive=`zip -r "${full_name_archive}.zip" "${@##*/}"`							#Создаем архив zip без шифрования
 						fi
 				fi
 				
 				if [[ "$packing" = "tgz" ]]
-					then archive=`tar cfvz "${full_name_archive}.tgz" "${@##*/}"`										#Создаем архив tgz
+					then archive=`tar cfvz "${full_name_archive}.tgz" "${@##*/}"`								#Создаем архив tgz
 				fi
 				
 				if [[ "$packing" = "7z" ]] 
 					then
 						if [[ "$password" != "" ]]											
 							then archive=`7z a "${full_name_archive}.7z" "${@##*/}" -mx9 -mhe=on -p"$password"`	#Создаем архив 7z с шифрованием
-							else archive=`7z a "${full_name_archive}.7z" "${@##*/}" -mx9`								#Создаем архив 7z без шифрования
+							else archive=`7z a "${full_name_archive}.7z" "${@##*/}" -mx9`						#Создаем архив 7z без шифрования
 						fi
 				fi
-				#notify-send -t 10000 -i "error" "Ошибка загрузки" "$archive"											#Отладка. Вывод результатов архивирования
 				
 				result=`"${path_wtclient}" upload "${full_name_archive}".*`
 			else 
@@ -69,17 +68,17 @@ if [ $? = 0 ]
 		
 		link=`echo $result | awk '{print $5}' `
 
-		if [[ `echo $link | grep "https://we.tl"` ]]																			#Проверка удачной загрузки
+		if [[ `echo $link | grep "https://we.tl"` ]]															#Проверка удачной загрузки
 			then
 				if [ "$password" != "" ] && [ "$packing" != "tgz" ]
 					then
-						echo -ne "$link\n$password" | xclip -i -selection clipboard										#Запись и пароля ссылки в буфер обмена
+						echo -ne "$link\n$password" | xclip -i -selection clipboard								#Запись и пароля ссылки в буфер обмена
 						notify-send -t 10000 -i "gtk-ok" "Загрузка на WeTransfer завершена" "Ссылка и пароль скопированы в буфер обмена"
 					else
-						echo -n "$link" | xclip -i -selection clipboard														#Запись ссылки в буфер обмена
+						echo -n "$link" | xclip -i -selection clipboard											#Запись ссылки в буфер обмена
 						notify-send -t 10000 -i "gtk-ok" "Загрузка на WeTransfer завершена" "Ссылка скопирована в буфер обмена"
 				fi
 			else
-				notify-send -t 10000 -i "error" "Ошибка загрузки" "$result"												#Вывод ошибки загрузки
+				notify-send -t 10000 -i "error" "Ошибка загрузки" "$result"										#Вывод ошибки загрузки
 		fi
 fi

@@ -2,7 +2,7 @@
 
 #Проверка установки пакета clamav
 if [ -z "`dpkg -l | grep clamav`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета clamav" -- bash -c "echo \"clamav не установлен\"; echo; \
+	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета clamav" -e bash -c "echo \"clamav не установлен\"; echo; \
 	sudo apt install clamav; sudo freshclam; sudo systemctl stop clamav-freshclam; sudo systemctl disable clamav-freshclam; \
 	echo; echo ------------------ ; echo ; echo \"Установка clamav завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
@@ -38,7 +38,7 @@ if [ $? = 0 ]
 				list="$(printf " %q" "${@}")"	#Присвоение пути, если выбраны файлы
 		fi
 		
-		gnome-terminal --hide-menubar --geometry 110x30 -t "clamav $PWD" -- bash -c "$update_command echo \"Идет загрузка базы сигнатур\"; echo; \
+		x-terminal-emulator --hide-menubar --geometry 110x30 -t "clamav $PWD" -e bash -c "$update_command echo \"Идет загрузка базы сигнатур\"; echo; \
 		clamscan $options $list; \
 		echo ; echo ------------------ ; echo ; echo \"Проверка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi

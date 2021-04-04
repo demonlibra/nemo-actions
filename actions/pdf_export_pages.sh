@@ -6,7 +6,7 @@ path=${fullpathname%/*}
 
 #Проверка установки пакета zenity
 if [ -z "`dpkg -l | grep zenity`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета zenity" -- bash -c "echo \"zenity не установлен\"; echo ; sudo apt install zenity; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета zenity" -e bash -c "echo \"zenity не установлен\"; echo ; sudo apt install zenity; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
 AAA=`zenity --entry --title="Извлечь страницы из PDF" --width=350 --text="Введите номера страниц (пример 1: 1-3,5,6) (пример 2: 5-z)" --entry-text="1"`

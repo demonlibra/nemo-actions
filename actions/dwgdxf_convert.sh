@@ -34,14 +34,14 @@ if [ $? = 0 ]
 		fi
 		
 		if [ $format = "svg" ]
-			then #gnome-terminal -t "dwg2svg \"$name\"" -e "sh $pathtoqcad/dwg2svg -f \"$fullpathname\""
+			then #x-terminal-emulator -t "dwg2svg \"$name\"" -e "sh $pathtoqcad/dwg2svg -f \"$fullpathname\""
 					bash "$pathtoqcad/dwg2svg" -f -o "$fullpathname"
 
 			elif [ $format = "pdf" ]
-				then #gnome-terminal -t "dwg2pdf \"$name\"" -e "sh $pathtoqcad/dwg2pdf -f -a -p \"$width\"x\"$height\" \"$fullpathname\""
+				then #x-terminal-emulator -t "dwg2pdf \"$name\"" -e "sh $pathtoqcad/dwg2pdf -f -a -p \"$width\"x\"$height\" \"$fullpathname\""
 						bash "$pathtoqcad/dwg2pdf" -f -a $style_option -p "$width"x"$height" -o "${fullpathname%.*}_$style.pdf" "$fullpathname"
 
-			else #gnome-terminal -t "dwg2bmp \"$name\"" -e "sh $pathtoqcad/dwg2bmp -f -b white -x $width -y $height -o \"${fullpathname%.*}.$format\" \"$fullpathname\""
+			else #x-terminal-emulator -t "dwg2bmp \"$name\"" -e "sh $pathtoqcad/dwg2bmp -f -b white -x $width -y $height -o \"${fullpathname%.*}.$format\" \"$fullpathname\""
 					bash "$pathtoqcad/dwg2bmp" -f -b white $style_option -x $width -y $height -o "${fullpathname%.*}_$style.$format" "$fullpathname"
 		fi
 

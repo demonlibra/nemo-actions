@@ -2,7 +2,7 @@
 
 #Проверка установки пакета clamav
 if [ -z "`dpkg -l | grep clamav`" ]
-	then gnome-terminal --hide-menubar --geometry=80x15 -t "Установка пакета clamav" -- bash -c "echo \"clamav не установлен\"; echo ; sudo apt install clamav; sudo freshclam; sudo systemctl stop clamav-freshclam; sudo systemctl disable clamav-freshclam; echo ; echo ------------------ ; echo ; echo \"Установка clamav завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета clamav" -e bash -c "echo \"clamav не установлен\"; echo ; sudo apt install clamav; sudo freshclam; sudo systemctl stop clamav-freshclam; sudo systemctl disable clamav-freshclam; echo ; echo ------------------ ; echo ; echo \"Установка clamav завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
 
 fullpathname=$@
@@ -34,5 +34,5 @@ if [ $? = 0 ]
 				update_command="echo \"Обновить базу сигнатур\"; echo; echo ------------------ ; sudo freshclam;"
 		fi		
 				
-		gnome-terminal --hide-menubar --geometry 110x30 -t "clamav $@" -- bash -c "$update_command clamscan $options \"$@\"; echo ; echo ------------------ ; echo ; echo \"Проверка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+		x-terminal-emulator --hide-menubar --geometry 110x30 -t "clamav $@" -e bash -c "$update_command clamscan $options \"$@\"; echo ; echo ------------------ ; echo ; echo \"Проверка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
 fi
