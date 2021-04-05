@@ -105,6 +105,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**secure_delete**|Удаление без возможности восстановления средствами Secure delete|
 |**send_by_email**|Отправить по почте|
 |**sh_run**|Выполнить скрипт bash|
+|**step2stl**|Конвертировать STEP в STL|
 |**stl2apng**|Создать анимированное изображение из STL|
 |**stl2png**|Создать изображение из STL|
 |**transfersh**|Загрузить на Transfer.sh|
