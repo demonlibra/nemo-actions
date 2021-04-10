@@ -4,14 +4,14 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Открыть в xed от имени root
+Name=Открыть в редакторе от имени root
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Открыть текстовый файл в редакторе xed от имени root
+Comment=Открыть текстовый файл в редакторе от имени root
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=<xed_as_root.sh %F>
+Exec=<editor_as_root.sh %F>
 
 # Icon name to use in the menu - must be a theme icon name
 Icon-Name=text-editor-symbolic

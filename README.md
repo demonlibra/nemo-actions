@@ -73,6 +73,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**docs_to_pdf_unoconv**|Преобразовать документы в PDF с помощью unoconv и libreoffice|
 |**doublecmd**|Открыть выбранный каталог в DoubleCommander|
 |**dwgdxf_convert**|Преобразовать чертеж в изображение или pdf средствами QCAD|
+|**editor_as_root**|Открыть текстовый файл в редакторе от имени root|
 |**gpg_encrypt**|Расшифровать файл gpg|
 |**hash**|Вычислить хэш-суммы MD5 или SHAх|
 |**image_compress**|Сжать изображения|
@@ -115,7 +116,6 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**video_process**|Изменить формат, bitrate, разрешение, кодек, поворот|
 |**video_storyboard**|Раскадровка видео|
 |**wetransfer**|Загрузить на Wetransfer|
-|**xed_as_root**|Открыть текстовый файл в редакторе xed от имени root|
 ## Сценарии (scripts)
 
 /home/имя_пользователя/.local/share/nemo/scripts
