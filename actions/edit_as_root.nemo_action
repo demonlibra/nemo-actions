@@ -11,7 +11,7 @@ Comment=Открыть текстовый файл в редакторе от и
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=<editor_as_root.sh %F>
+Exec=<edit_as_root.sh %F>
 
 # Icon name to use in the menu - must be a theme icon name
 Icon-Name=text-editor-symbolic

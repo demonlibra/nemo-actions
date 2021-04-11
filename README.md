@@ -1,7 +1,7 @@
 # Контекстное меню Nemo
 ### Действия (actions) и сценарии (scripts) при нажатии правой кнопкой мыши
 
-Для решения рутинных задач с файлами и каталогами в файловом менеджере Nemo присутствует возможность создавать *Действия (actions)* и *Сценарии (scripts)*.
+Для решения рутинных задач с файлами и каталогами в файловом менеджере Nemo, развиваемого в рамках среды рабочего стола Cinnamon, присутствует возможность создавать *Действия (actions)* и *Сценарии (scripts)*.
 
 **Сценарии** отображаются при выборе любых файлов и/или каталогов.  
 Файлы *сценариев* хранятся в каталоге `/home/имя_пользователя/.local/share/nemo/scripts/`  
@@ -10,7 +10,7 @@
 **Действия** удобно применять целенаправлено при выделении определенных объектов и имеют множество настроек.  
 Файлы *действий* хранятся в каталоге `/home/имя_пользователя/.local/share/nemo/actions/`.  
 Настройки задаются в одноименных файлах с расширением `.nemo_action`  
-Подробное описание смотрите в файлах `help` и `help_ru`.
+Подробное описание смотрите в файлах [help](https://github.com/demonlibra/nemo-actions/blob/master/actions/help) и [help_ru](https://github.com/demonlibra/nemo-actions/blob/master/actions/hep_ru).
 
 Вопросы можно задать в разделе [Issues](https://github.com/demonlibra/nemo-actions/issues) или на форуме [LinuxMint.com.ru](https://linuxmint.com.ru/viewtopic.php?t=4416)
 
@@ -54,9 +54,6 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 При выполнении присутствует 15 секундная задержка. Если выполнить в терминале то увидите сообщение: You are using a trial version of the QCAD Professional plugin. If you would like to use this software productively, please purchase the full version ... После истечения 15 секунд выполнение продолжается.  
 В переменной **pathtoqcad** необходимо указать путь к папке, содержащей скрипты **dwg2bmp, dwg2svg и dwg2bmp**.
 
-4. **firefoxsend** использует программу **ffsend**. Необходимо скачать [ffsend-v____-linux-x64](https://github.com/timvisee/ffsend/releases), переименовать в `ffsend`, сделать исполняемым и перенести бинарный файл `ffsend` в каталог `/usr/local/bin/`  
-`mv ./ffsend-* ./ffsend; chmod a+x ./ffsend; sudo mv ./ffsend /usr/bin`
-
 ## Действия (actions)
 
 /home/имя_пользователя/.local/share/nemo/actions
@@ -73,7 +70,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**docs_to_pdf_unoconv**|Преобразовать документы в PDF с помощью unoconv и libreoffice|
 |**doublecmd**|Открыть выбранный каталог в DoubleCommander|
 |**dwgdxf_convert**|Преобразовать чертеж в изображение или pdf средствами QCAD|
-|**editor_as_root**|Открыть текстовый файл в редакторе от имени root|
+|**edit_as_root**|Открыть текстовый файл в редакторе от имени root|
 |**gpg_encrypt**|Расшифровать файл gpg|
 |**hash**|Вычислить хэш-суммы MD5 или SHAх|
 |**image_compress**|Сжать изображения|
