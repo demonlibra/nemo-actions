@@ -71,6 +71,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**doublecmd**|Открыть выбранный каталог в DoubleCommander|
 |**dwgdxf_convert**|Преобразовать чертеж в изображение или pdf средствами QCAD|
 |**edit_as_root**|Открыть текстовый файл в редакторе от имени root|
+|**git_last_change**|Изменить последний commit на GitHub|
 |**git**|Добавить commit на GitHub|
 |**gpg_encrypt**|Расшифровать файл gpg|
 |**hash**|Вычислить хэш-суммы MD5 или SHAх|

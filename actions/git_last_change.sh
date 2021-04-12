@@ -18,22 +18,6 @@ if ! [ -d ".git" ]
 		exit 0
 fi
 
-# Проверка наличия изменений
-if [[ -z `git diff` ]]
-	then
-		# Если изменения отсутствуют, завершения сценария
-		echo
-		echo "Отсутствуют изменения"
-		echo
-		read -p "Нажмите ENTER чтобы закрыть окно"
-		exit 0
-fi
-
-# Вывод изменений
-echo
-git diff
-echo
-read -p "Нажмите ENTER чтобы загрузить изменения на GitHub"
 
 # Добавление файлов для загрузки
 echo
@@ -41,21 +25,16 @@ git add .
 echo -e '\E[1;32m'"Выполнена команда: git add ."
 tput sgr0 
 
-# Ввод коммита
 echo
-echo -n "Введите текст коммита: "
-read commit_text
-
+git commit --amend
 echo
-git commit -m "${commit_text}"
-echo
-echo -e '\E[1;32m'"Выполнена команда: git commit -m \"${commit_text}\""
+echo -e '\E[1;32m'"Выполнена команда: git commit --ammend"
 tput sgr0 
 
 echo
-git push
+git push --force
 echo
-echo -e '\E[1;32m'"Выполнена команда: git push"
+echo -e '\E[1;32m'"Выполнена команда: git push --force"
 tput sgr0 
 
 echo
