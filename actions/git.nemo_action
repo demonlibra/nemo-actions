@@ -4,14 +4,14 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Залить на GitHub
+Name=Добавить commit
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Залить на GitHub
+Comment=Добавить commit на GitHub
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=x-terminal-emulator -e bash /home/demonlibra/.local/share/nemo/actions/git.sh %F
+Exec=x-terminal-emulator -e bash .local/share/nemo/actions/git.sh %F
 
 # Icon name to use in the menu - must be a theme icon name
 Icon-Name=upload-media
