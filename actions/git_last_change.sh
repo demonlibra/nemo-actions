@@ -18,6 +18,11 @@ if ! [ -d ".git" ]
 		exit 0
 fi
 
+# Вывод изменений
+echo
+git diff
+echo
+read -p "Нажмите ENTER чтобы загрузить изменения на GitHub"
 
 # Добавление файлов для загрузки
 echo
