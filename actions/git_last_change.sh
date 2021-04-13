@@ -30,12 +30,14 @@ git add .
 echo -e '\E[1;32m'"Выполнена команда: git add ."
 tput sgr0 
 
+# Редактирование описания коммита
 echo
 git commit --amend
 echo
 echo -e '\E[1;32m'"Выполнена команда: git commit --ammend"
 tput sgr0 
 
+# Загрузка коммита
 echo
 git push --force
 echo

@@ -48,7 +48,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 
 
 2. Для работы действий и сценариев, использующих специальные программы, требуется установка этих программ, например: cuneiform, doublecommnder, enca, ffmpeg, imagemagick, mediainfo, qcad, recoll, secure-delete, tesseract, webp. Для их установки выполните в терминале следующую команду:  
-`sudo apt install cuneiform doublecmd-gtk enca ffmpeg imagemagick mediainfo recoll secure-delete tesseract-ocr tesseract-ocr-rus unoconv`
+`sudo apt install cuneiform doublecmd-gtk enca ffmpeg freecad imagemagick mediainfo openscad recoll secure-delete tesseract-ocr tesseract-ocr-rus unoconv`
 
 3. **dwgdxf_convert** использует модули программы **QCAD**. Необходимо скачать и распаковать архив [qcad-3.xxx.linux.tar.gz или qcad-3.xxx.linux-qt4.tar.gz](https://www.ribbonsoft.com/en/qcad-downloads-trial)  
 При выполнении присутствует 15 секундная задержка. Если выполнить в терминале то увидите сообщение: You are using a trial version of the QCAD Professional plugin. If you would like to use this software productively, please purchase the full version ... После истечения 15 секунд выполнение продолжается.  
