@@ -1,15 +1,75 @@
 #!/bin/bash
 
-fullpathname=$@
+# https://riptutorial.com/dropbox-api/example/1376/retrieving-an-existing-shared-link-for-a-specific-file-using-curl
+# https://riptutorial.com/dropbox-api/topic/414/getting-a-shared-link-for-a-file-or-folder
+# https://riptutorial.com/dropbox-api/example/1378/creating-a-shared-link-for-a-file-using-curl
 
-# Получаем ссылку
-link=`dropbox sharelink "$fullpathname"`
+####################################################################################################
+### ------------------------------------- Instruction to setup ----------------------------------###
 
-# Проверяем наличие ссылки и выводим уведомление
-if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
+# You must have Dropbox account
+# Open in browser https://www.dropbox.com/developers/apps
+# Select "Create app"
+# Select "Scoped access"
+# Select "App folder"
+# Set "Name your app"
+# Set permissions files.metadata.write, files.content.write, sharing.write, file_requests.write
+# Generate "OAuth 2" and insert it below
+
+key='Insert here OAuth2 key'		# Key OAuth2
+local_path="$HOME/Dropbox"			# Dropbox local path with app folder
+
+####################################################################################################
+### ------------------------------------- Script ----------------------------------------------- ###
+
+# Полный путь к файлу
+fullpathname="$PWD/$@"
+
+# Проверяем, запущен ли dropbox
+if ! dropbox status | grep "Dropbox isn't running!"
 	then
-		echo -n "$link" | xclip -i -selection clipboard						# Записываем ссылку в буфер обмена
-		notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
+		# Если Dropbox запущен
+		link=`dropbox sharelink "$fullpathname"`
+		
+		# Проверяем наличие ссылки и выводим уведомление
+		if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
+			then
+				echo -n "$link" | xclip -i -selection clipboard						# Записываем ссылку в буфер обмена
+				notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
+			else
+				notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $link"
+		fi
+
 	else
-		notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $link"
+	
+		# Если dropbox не запущен, используем curl 
+
+		path="${fullpathname/$local_path/}"
+		path=`echo "$path" | sed 's/^\///;s/\/$//'`									# Убираем / в начале строки, если есть
+
+		output=`curl -X POST https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings \
+					--header "Authorization: Bearer $key" \
+					--header "Content-Type: application/json" \
+					--data "{\"path\": \"/$path\",\"settings\": {\"requested_visibility\": \"public\"}}"`
+
+		# Если ссылка была создана ранее
+		if echo "$output" | grep "shared_link_already_exists"
+			then
+				output=`curl -X POST https://api.dropboxapi.com/2/sharing/list_shared_links \
+					--header "Authorization: Bearer $key" \
+					--header "Content-Type: application/json" \
+					--data "{\"path\": \"/$path\", \"direct_only\": true}"`
+		fi
+
+		# Проверяем наличие ссылки и выводим уведомление
+		if [[ `echo "$output" | grep "https://www.dropbox.com/"` ]]
+			then
+				link=`echo $output | grep -Po 'https:.*' | grep -Po '.*dl=0'`		# Вырезаем ссылку из вывода curl
+				echo; echo "link = $link"; echo
+				echo -n "$link" | xclip -i -selection clipboard						# Записываем ссылку в буфер обмена
+				notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox при помощи CURL завершена" "Ссылка скопирована в буфер обмена:\n$link"
+			else
+				notify-send -t 10000 -i "error" "Dropbox" "При загрузке при помощи CURL возникла ошибка: $status"
+		fi
+
 fi
