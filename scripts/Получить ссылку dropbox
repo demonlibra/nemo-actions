@@ -1,0 +1,15 @@
+#!/bin/bash
+
+fullpathname=$@
+
+# Получаем ссылку
+link=`dropbox sharelink "$fullpathname"`
+
+# Проверяем наличие ссылки и выводим уведомление
+if [[ `echo "$link" | grep "https://www.dropbox.com/"` ]]
+	then
+		echo -n "$link" | xclip -i -selection clipboard						# Записываем ссылку в буфер обмена
+		notify-send -t 10000 -i "gtk-ok" "Загрузка на Dropbox завершена" "Ссылка скопирована в буфер обмена:\n$link"
+	else
+		notify-send -t 10000 -i "error" "Dropbox" "При загрузке возникла ошибка: $link"
+fi

@@ -6,7 +6,7 @@ readme="$path_git/README.md"
 
 rm -f "$readme"
 rsync -av --progress --delete $path_nemo"/actions/" $path_git"/actions/"
-rsync -av --progress --delete --exclude="*Яндекс*" --exclude="*dropbox*" $path_nemo"/scripts/" $path_git"/scripts/"
+rsync -av --progress --delete --exclude="*Яндекс*" --exclude="Загрузить на dropbox" $path_nemo"/scripts/" $path_git"/scripts/"
 
 echo "# Контекстное меню Nemo" >> "$readme"
 echo "### Действия (actions) и сценарии (scripts) при нажатии правой кнопкой мыши" >> "$readme"
