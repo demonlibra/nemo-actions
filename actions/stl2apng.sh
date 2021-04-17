@@ -1,6 +1,10 @@
 #!/bin/bash
 
-tmp="/tmp"
+tmp="/tmp/stl_preview"					# Временный каталог для кадров превью
+if [ -d "$tmp" ]
+	then rm --force --recursive "$tmp"	# Удалить временный каталог, если существует
+fi
+mkdir "$tmp"							# Создать временный каталог, если не существует
 
 #Проверка установки пакета yad
 if [ -z "`dpkg -l | grep yad`" ]
