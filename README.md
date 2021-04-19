@@ -125,6 +125,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**Загрузить на dropbox**|
 |**Загрузить на transfersh**|
 |**Загрузить на wetransfer**|
+|**Конвертировать step в stl**|
 |**Контрольная сумма**|
 |**Отправить через ssh**|
 |**Получить ссылку dropbox**|
