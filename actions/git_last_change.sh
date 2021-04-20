@@ -20,7 +20,7 @@ fi
 
 # Вывод изменений
 echo
-git diff
+git --no-pager diff
 echo
 read -p "Нажмите ENTER чтобы загрузить изменения на GitHub"
 

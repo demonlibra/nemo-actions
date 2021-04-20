@@ -19,7 +19,7 @@ if ! [ -d ".git" ]
 fi
 
 # Проверка наличия изменений
-if [[ -z `git -P diff` ]]
+if [[ -z `git --no-pager diff` ]]
 	then
 		# Если изменения отсутствуют, завершаем сценарий
 		echo
@@ -32,7 +32,7 @@ fi
 
 # Вывод изменений
 echo
-git -P diff
+git --no-pager diff
 
 echo
 
