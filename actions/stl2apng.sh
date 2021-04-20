@@ -1,6 +1,8 @@
 #!/bin/bash
 
-tmp="/tmp/stl_preview"					# Временный каталог для кадров превью
+#tmp="/tmp/stl_preview"					# Временный каталог для кадров превью
+tmp=`mktemp --directory --tmpdir="/tmp" "stl2apng_XXXXX"`	# Генерировать уникальный временный каталог
+
 if [ -d "$tmp" ]
 	then rm --force --recursive "$tmp"	# Удалить временный каталог, если существует
 fi
