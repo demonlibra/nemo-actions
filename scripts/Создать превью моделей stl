@@ -11,8 +11,8 @@ if [ -z "`dpkg -l | grep openscad`" ]
 fi
 
 AAA=`yad --borders=10 --title="stl 2 png" --text="Создание изображения из stl" --text-align=center --form --item-separator="|" \
-	--field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Цветовая схема:CB" 														--field="Проекция:CB" --field="Автоцентровка:CHK" --field="Вписать модель в размер:CHK" --field="Камера авто:CHK" --field="Камера ручн." 		--field="              transx,transy,transz,rotx,roty,rotz,distance:LBL" --field="Формат изображений:CB" \
-		"" 					1080											1080				"^Cornfield|Sunset|Metallic|Starnight|BeforeDawn|Nature|Случайная"	"ortho|perspective" 						TRUE								TRUE												TRUE				"0,0,0,25,0,35,500"								""																						"png|gif|jpg"`
+	--field=:LBL --field="Ширина изображения" --field="Высота изображения" --field="Цветовая схема:CB" 											--field="Проекция:CB" --field="Автоцентровка:CHK" --field="Вписать модель в размер:CHK" --field="Камера авто:CHK" --field="Камера ручн." 		--field="              transx,transy,transz,rotx,roty,rotz,distance:LBL" --field="Формат изображений:CB" \
+		"" 					1080						1080				"^Cornfield|Sunset|Metallic|Starnight|BeforeDawn|Nature|Случайная"	 "ortho|perspective" 				TRUE								TRUE						TRUE			"0,0,0,25,0,35,500"								""																						"png|gif|jpg"`
 
 if [ $? = 0 ]
 	then

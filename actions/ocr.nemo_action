@@ -19,7 +19,7 @@ Icon-Name=applications-font
 # What type selection: [s]ingle, [m]ultiple, any, notnone, none (background click), or
 # a number representing how many files must be selected to display.
 # ****** REQUIRED *******
-Selection=m
+Selection=notnone
 
 # What extensions to display on - this is an array, end with a semicolon
 # Single entry options, ending in a semicolon:
