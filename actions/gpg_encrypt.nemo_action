@@ -1,6 +1,6 @@
 [Nemo Action]
 
-Active=false
+Active=true
 Name=Расшифровать файл gpg
 Comment=Расшифровать файл gpg
 Exec=gpg "%F"
