@@ -4,16 +4,16 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Сжать изображения
+Name=Отправить в DUET
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Сжать изображения
+Comment=Отправить файл с g-кодом на SD-карту платы DUET
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=<image_compress.sh %F>
+Exec=<rrf_send.sh %F>
 
-Icon-Name=camera-photo-symbolic
+Icon-Name=network-wireless
 
 # What type selection: [s]ingle, [m]ultiple, any, notnone, none (background click), or
 # a number representing how many files must be selected to display.
@@ -29,7 +29,7 @@ Selection=notnone
 # Individual specific extensions can be a semicolon-terminated list
 # Extensions are NOT case sensitive.  jpg will match JPG, jPg, jpg, etc..
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****
-Extensions=bmp;gif;ico;jpe;jpg;jpeg;png;ppm;tif;tiff;
+Extensions=gcode;g;g-code;
 
 # What mime-types to display on - this is an array, end with a semicolon
 # **** EITHER EXTENSIONS OR MIMETYPES IS REQUIRED *****

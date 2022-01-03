@@ -75,7 +75,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**git**|Добавить commit на GitHub|
 |**gpg_encrypt**|Расшифровать файл gpg|
 |**hash**|Вычислить хэш-суммы MD5 или SHAх|
-|**image_compress**|Отправить файл с g-кодом на SD-карту платы DUET|
+|**image_compress**|Сжать изображения|
 |**image_convert**|Конвертировать формат изображения|
 |**image_crop**|Обрезать изображения|
 |**image_gamma**|Изменить гамму изображений|
@@ -102,7 +102,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**ps_convert**|Преобразовать postscript в PDF или PNG|
 |**py_run**|Выполнить сценарий python|
 |**qbittorrent**|Добавить в qbittorrent с одинаковыми параметрами|
-|**rrf_send**|Сжать изображения|
+|**rrf_send**|Отправить файл с g-кодом на SD-карту платы DUET|
 |**secure_delete**|Удаление без возможности восстановления средствами Secure delete|
 |**send_by_email**|Отправить по почте|
 |**sh_run**|Выполнить скрипт bash|
