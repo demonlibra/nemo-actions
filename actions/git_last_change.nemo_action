@@ -11,7 +11,7 @@ Comment=Изменить последний commit на GitHub
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****
-Exec=x-terminal-emulator -geometry 100x35 -e bash .local/share/nemo/actions/git.sh %F
+Exec=gnome-terminal --geometry=100x35 -x bash /home/demonlibra/.local/share/nemo/actions/git_last_change.sh %F
 
 # Icon name to use in the menu - must be a theme icon name
 Icon-Name=upload-media

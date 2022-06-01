@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#quoted_args="$(printf " %q" "${@}")"
+
+
+
+for file in "$@"
+	do
+		sufix=`date +%Y-%m-%d_%H-%M-%S`
+		newname="${file%.*}_${sufix}.${file##*.}"
+		mv "$file" "$newname" 
+		#notify-send -t 10000 -i "gtk-ok" "123" "$newname"
+done
+

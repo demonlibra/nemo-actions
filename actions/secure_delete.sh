@@ -2,10 +2,18 @@
 
 #Проверка установки пакета secure-delete
 if [ -z "`dpkg -l | grep secure-delete`" ]
-	then x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета secure-delete" -e bash -c "echo \"secure-delete не установлен\"; echo ; sudo apt install secure-delete; echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
-fi
+	then
+		x-terminal-emulator --hide-menubar --geometry=80x15 -t "Установка пакета secure-delete" \
+			-e bash -c "echo \"secure-delete не установлен\"; echo ; sudo apt install secure-delete; \
+			echo ; echo ------------------ ; echo ; echo \"Установка завершена\"; \
+			echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+	fi
 
-AAA=`yad --borders=10 --title="secure-delete" --text="Безвозвратное удаление" --text-align=center --form --separator="," --item-separator="|" --field=:LBL --field="Быстро (no /dev/urandom, no synchronize mode):CHK" --field="Меньше проходов (2 прохода 0xff/random):CHK" --field="Ещё меньше проходов (1 проход random):CHK" --field="От имени root:CHK" "" TRUE TRUE TRUE FALSE`
+AAA=`yad --borders=10 --title="secure-delete" --text="Безвозвратное удаление" --text-align=center --form --separator="," --item-separator="|" \
+	--field=:LBL --field="Быстро (no /dev/urandom, no synchronize mode):CHK" \
+	--field="Меньше проходов (2 прохода 0xff/random):CHK" \
+	--field="Ещё меньше проходов (1 проход random):CHK" \
+	--field="От имени root:CHK" "" TRUE TRUE TRUE FALSE`
 
 if [ $? = 0 ]
 	then
