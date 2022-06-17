@@ -19,7 +19,7 @@ if ! [ -d ".git" ]
 fi
 
 # Проверка наличия изменений
-if [[ -z `git --no-pager diff` ]]
+if [[ -z `git --no-pager diff` ]] && [[ -z `git ls-files --others --exclude-standard` ]]
 	then
 		# Если изменения отсутствуют, завершаем сценарий
 		echo
@@ -31,9 +31,11 @@ if [[ -z `git --no-pager diff` ]]
 fi
 
 # Вывод изменений
-echo
+echo "Изменения"
 git --no-pager diff
-
+echo
+echo "Новые файлы"
+git ls-files --others --exclude-standard
 echo
 
 read -p "Нажмите ENTER чтобы загрузить изменения на GitHub"
