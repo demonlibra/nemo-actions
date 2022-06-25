@@ -30,7 +30,7 @@ fi
 
 AAA=`yad --borders=10 --title="stl 2 apng" --text="Создание анимации из stl" --text-align=center --form --item-separator="|" \
 --field=:LBL --field="Ширина изображения" --field="Высота изображения" 	--field="Цветовая схема:CB" 								--field="Проекция:CB" --field="Смещение вдоль осей" --field="Автоцентровка:CHK" --field="Отдаление от модели" --field="Вписать модель в размер:CHK" --field="Начальный угол оси X" --field="Начальный угол оси Y" --field="Начальный угол оси Z" --field="Вращать вокруг оси:CB" --field="Угол поворота оси за шаг" --field="Задержка анимации(1/5 сек)" --field="Сохранить в PNG:CHK" --field="Сохранить в GIF:CHK" \
-		"" 					600							600		"^Cornfield|Sunset|Metallic|Starnight|BeforeDawn|Nature|Случайная"	"ortho|perspective" 			"0,0,0" 						TRUE 							"500"							TRUE							25							25								0										"X|^Y|Z"						10							"1 5"								FALSE							TRUE`
+		"" 					600							600		"^Cornfield|Sunset|Metallic|Starnight|BeforeDawn|Nature|Случайная"	"ortho|perspective" 			"0,0,0" 						TRUE 							"500"							TRUE							25							25								0										"X|^Y|Z"						10							"1 4"								FALSE							TRUE`
 
 if [ $? = 0 ]
 	then
