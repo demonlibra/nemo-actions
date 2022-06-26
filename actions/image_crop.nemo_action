@@ -4,10 +4,10 @@ Active=true
 
 # The name to show in the menu, locale supported with standard desktop spec.
 # **** REQUIRED ****
-Name=Обрезать изображения
+Name=Изменить размер изображения
 
 # Tool tip, locale supported (Appears in the status bar)
-Comment=Обрезать изображения
+Comment=Изменить размер изображения
 
 # What to run.  Enclose in < > to run an executable that resides in the actions folder.
 # **** REQUIRED ****

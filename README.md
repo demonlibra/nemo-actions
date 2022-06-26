@@ -77,7 +77,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**hash**|Вычислить хэш-суммы MD5 или SHAх|
 |**image_compress**|Сжать изображения|
 |**image_convert**|Конвертировать формат изображения|
-|**image_crop**|Обрезать изображения|
+|**image_crop**|Изменить размер изображения|
 |**image_gamma**|Изменить гамму изображений|
 |**image_montage**|Объединить изображения|
 |**image_resolution**|Изменить разрешение изображений|

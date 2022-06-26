@@ -10,8 +10,8 @@ if [ -z "`dpkg -l | grep zenity`" ]
 fi
 
 FORM=`yad --borders=10 --width=300 --title="Обрезать изображения" --text-align=center --form --item-separator="|" --separator="," \
-	 --field="Позиция отсчёта:CB" 												--field="Ширина и высота (WxH)" 	--field="Смещение (+X+Y)"	--field="Расширить, если исходный размер меньше:CHK"	--field="Перезаписать файл:CHK" \
-	"None|NorthWest|North|NorthEast|West|^Center|East|SouthWest|South|SouthEast"			"800x600"						"+0+0"						FALSE												FALSE`
+	 --field="Позиция отсчёта:CB" 												--field="Ширина и высота (WxH)" 	--field="Смещение (+X+Y)"	--field="Расширить, если исходный размер меньше:CHK"	--field="Цвет фона при расширении:CLR"	--field="Перезаписать файл:CHK" \
+	"None|NorthWest|North|NorthEast|West|^Center|East|SouthWest|South|SouthEast"			"800x600"						"+0+0"						FALSE															white								FALSE`
 
 if [ $? = 0 ]
 	then
@@ -20,12 +20,13 @@ if [ $? = 0 ]
 		offset=$( echo $FORM | awk -F ',' '{print $3}')
 		
 		extent=$( echo $FORM | awk -F ',' '{print $4}')
+		color=$( echo $FORM | awk -F ',' '{print $5}')
 		if [ $extent == TRUE ]
-			then extent="-extent $size"
+			then extent="-background $color -extent $size"
 			else extent=""
 		fi
-		
-		rewrite=$( echo $FORM | awk -F ',' '{print $5}')
+
+		rewrite=$( echo $FORM | awk -F ',' '{print $6}')
 
 		kolfile=$#							# Количество выделенных файлов
 		procent=$((100/$kolfile))			# Процентов на каждый файл
@@ -33,10 +34,8 @@ if [ $? = 0 ]
 		(for file in "$@"
 			do
 				if [ "$rewrite" == "TRUE" ]
-					then
-						convert "$file" -gravity $gravity -crop $size$offset $extent "$file"
-					else
-						convert "$file" -gravity $gravity -crop $size$offset $extent "${file%.*}_crop.${file##*.}"
+					then convert "$file" -gravity $gravity -crop $size$offset $extent "$file"
+					else convert "$file" -gravity $gravity -crop $size$offset $extent "${file%.*}_crop.${file##*.}"
 				fi
 
 				counter=$(($counter+1))
