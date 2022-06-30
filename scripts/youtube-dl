@@ -1,0 +1,61 @@
+#!/bin/bash
+
+path_to_save="$PWD/$1"													# Выбранный каталог для загрузки 
+file_name1="%(title)s.%(ext)s"											# Имя файла для сохранения
+file_name2="%\(title\)s.%\(ext\)s"										# Имя файла для сохранения после ввода кода формата
+
+clipboard=`xclip -sel clip -o`											# Присвоить переменной path содержимое буфера обмена
+
+if [[ -z `echo $clipboard | grep "youtu"` ]]
+	then
+	notify-send -t 10000 -i "gtk-error" "youtube-dl" "Буфер обмена не содержит ссылку на YouTube"
+	exit
+elif [[ `echo $clipboard | grep "https://"` ]]							# Корректировка ссылки. Добавить "https://"
+	then url=$clipboard
+	else url="https://"$clipboard
+fi
+
+link=${url/"›"/"/"}														# Корректировка ссылки. Убрать символ ">"
+
+# Вывод формы
+parameters=`yad --focus-field=4 --borders=20 --title="Youtube-dl" --text="Скачать видео" \
+	--button="Скачать:0" \
+	--button="Список форматов:5" \
+	--button="Отмена:1" \
+	--text-align=center --width=500 --item-separator="|" --form \
+	--field=" :LBL" --field="Ссылка:RO"			--field="Выбор качества:CB" 				--field="Каталог для сохранения:RO" --field="Скачать только обложку:CHK" --field=" :LBL" --field="Скачать отрезок:LBL" --field="Начало (1:00):" --field="Длительность, сек:" --field=" :LBL" \
+		""				"$link"		"best|bestvideo|bestaudio|worst|worstvideo|worstaudio"			"${path_to_save}"`
+
+exit_status=$?
+
+quality=$( echo $parameters | awk -F '|' '{print $3}')					# Выбор качества видео
+dir=$( echo $parameters | awk -F '|' '{print $4}')						# Каталог для сохранения файла
+thumbnail=$( echo $parameters | awk -F '|' '{print $5}')				# Скачать только обложку
+start=$( echo $parameters | awk -F '|' '{print $8}')					# Время начала отрезка
+duration=$( echo $parameters | awk -F '|' '{print $9}')					# Длительность
+
+if [ "$exit_status" = 0 ]												# Закачка
+   then
+		if [ $thumbnail = TRUE ]										# Скачать только обложку
+			then
+				gnome-terminal --title="youtube-dl" --geometry=70x6 --hide-menubar \
+					-e "youtube-dl --console-title --write-thumbnail --skip-download --output \"$dir/${file_name1}\" $link"
+				
+		elif [ -z $start ]
+			then
+				gnome-terminal --title="youtube-dl" --geometry=70x6 --hide-menubar \
+					-e "youtube-dl --console-title --continue --output \"$dir/${file_name1}\" --format $quality $link"
+			else
+				#gnome-terminal -e "bash -c \"youtube-dl --get-filename $link; read\""
+				sufix="${start/:/-}_${duration/:/-}"
+				file_name3=`youtube-dl --get-filename "$link"`
+				#notify-send -t 10000 -i "gtk-ok" "123" "${file_name3}_$sufix"
+				ffmpeg -y $(youtube-dl -g "$link" | sed "s/.*/-ss $start -i &/") -t $duration -c copy "${path_to_save}/${file_name3}_$sufix.mkv"
+		fi
+fi
+
+if [ "$exit_status" = 5 ]												# Получение списка форматов
+	then 
+		gnome-terminal --wait --title="youtube-dl - $link" --geometry=120x26 --hide-menubar \
+		-e "bash -c \"youtube-dl -F $link; echo; echo $link; echo; echo -n \"\"Введите format code:\ \"\"; read format; echo \$format; youtube-dl --console-title --continue --output $path_to_save/$file_name2 --format \$format \"$link\"; read\""
+fi
