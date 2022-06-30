@@ -18,12 +18,12 @@ fi
 link=${url/"›"/"/"}														# Корректировка ссылки. Убрать символ ">"
 
 # Вывод формы
-parameters=`yad --focus-field=4 --borders=20 --title="Youtube-dl" --text="Скачать видео" \
+parameters=`yad --focus-field=4 --borders=20 --width=600 --title="Youtube-dl" --text="Скачать видео" \
 	--button="Скачать:0" \
 	--button="Список форматов:5" \
 	--button="Отмена:1" \
-	--text-align=center --width=500 --item-separator="|" --form \
-	--field=" :LBL" --field="Ссылка:RO"			--field="Выбор качества:CB" 				--field="Каталог для сохранения:RO" --field="Скачать только обложку:CHK" --field=" :LBL" --field="Скачать отрезок:LBL" --field="Начало (1:00):" --field="Длительность, сек:" --field=" :LBL" \
+	--text-align=center --item-separator="|" --form \
+	--field=" :LBL" --field="Ссылка:RO"			--field="Выбор качества:CB" 				--field="Каталог для сохранения:DIR" --field="Скачать только обложку:CHK" --field=" :LBL" --field="Скачать отрезок:LBL" --field="Начало (1:00):" --field="Длительность, сек:" --field=" :LBL" \
 		""				"$link"		"best|bestvideo|bestaudio|worst|worstvideo|worstaudio"			"${path_to_save}"`
 
 exit_status=$?
