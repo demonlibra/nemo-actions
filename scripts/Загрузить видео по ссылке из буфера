@@ -5,7 +5,7 @@ path_to_save="$1"														# Выбранный каталог для заг
 file_name1="%(title)s.%(ext)s"											# Имя файла для сохранения
 file_name2="%\(title\)s.%\(ext\)s"										# Имя файла для сохранения после ввода кода формата
 
-clipboard=`xclip -sel clip -o`											# Присвоить переменной path содержимое буфера обмена
+clipboard=`xclip -sel clip -o`											# Присвоить переменной содержимое буфера обмена
 
 if [[ -z `echo $clipboard | grep "youtu"` ]]
 	then
@@ -39,12 +39,12 @@ if [ "$exit_status" = 0 ]												# Закачка
    then
 		if [ $thumbnail = TRUE ]										# Скачать только обложку
 			then
-				gnome-terminal --title="youtube-dl" --geometry=70x6 --hide-menubar \
+				gnome-terminal --wait --title="youtube-dl" --geometry=70x6 --hide-menubar \
 					-e "youtube-dl --console-title --write-thumbnail --skip-download --output \"$dir/${file_name1}\" $link"
 				
 		elif [ -z $start ]
 			then
-				gnome-terminal --title="youtube-dl" --geometry=70x6 --hide-menubar \
+				gnome-terminal --wait --title="youtube-dl" --geometry=70x6 --hide-menubar \
 					-e "youtube-dl --console-title --continue --output \"$dir/${file_name1}\" --format $quality $link"
 			else
 				sufix="${start/:/-}_${duration/:/-}"
