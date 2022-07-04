@@ -1,29 +1,48 @@
 #!/bin/bash
 
-fullpathname=$@
-name=${fullpathname##*/}
-path=${fullpathname%/*}
+path=$1
+path=${path%/*}
 
-#Проверка установки пакета zenity
-if [ -z "`dpkg -l | grep zenity`" ]
-	then xfce4-terminal --hide-menubar --geometry=80x15 -T "Установка пакета zenity" -x bash -c "echo \"zenity не установлен\"; echo ; sudo apt install zenity; echo ; echo ------------------ ; echo ; echo \"Установка yad завершена\"; echo ; read -p \"Нажмите ENTER чтобы закрыть окно\""
+if [[ -n `echo $path | grep "//"` ]]
+	then
+		notify-send -t 10000 -i "error" "Остановлено" "Путь содержит некорректные символы. \nВозможно повреждение файлов!!!\n\nСкопируйте файлы на локальный носитель."
+		notify-send -t 10000 -i "error" "Остановлено" "$path"
+		exit
 fi
 
-AAA=`zenity --entry --title="Поворот изображений" --width=350 --text="Введите угол поворота (+ по ЧС, - против ЧС)"`
+parameters=`yad --borders=20 --width=350 --title="Поворот изображений" \
+	--text-align=center --item-separator="|" --separator="!" --form \
+	--field="Угол поворота (+ по часовой стрелке):NUM"	--field=" :LBL"		--field="Каталог для сохранения:DIR"	--field="Добавить суфикс к имени файла:CHK" \
+						"90|-360..360|1|1"					""								"$path"									"TRUE"`
 
-if [ $? = 0 ]
+exit_status=$?
+
+if [ $exit_status = 0 ]
 	then
-		kolfile=$#					#Количество выделенных файлов
-		procent=$((100/$kolfile))	#Процентов на каждый файл
+		angle=$( echo $parameters | awk -F '!' '{print $1}')
+		angle=${angle/","/"."}
 
-	(for file in "$@"
-		do
-			convert "$file" -rotate $AAA "$file"
-			counter=$(($counter+1))
-			progress=$(($progress+$procent))
-			echo $progress
-			echo "# Обработано $counter из $kolfile"
-		done)|zenity --progress --title="Поворот изображений" --auto-close --auto-kill --width=200
+		dir=$( echo $parameters | awk -F '!' '{print $3}')
+		sufix=$( echo $parameters | awk -F '!' '{print $4}')
 
-	notify-send -t 10000 -i "gtk-ok" "Завершено" "Поворот изображений на $AAA градусов"
+		kolfile=$#														# Количество выделенных файлов
+		procent=$((100/$kolfile))										# Процентов на каждый файл
+
+		(for file in "$@"
+			do
+				filename="${file##*/}"
+				if [ $sufix == TRUE ]
+					then file_out="$dir/${filename%.*}_$angle.${file##*.}"
+					else file_out="$dir/$filename"
+				fi
+
+				convert "$file" -rotate "$angle" "$file_out"
+
+				counter=$(($counter+1))
+				progress=$(($progress+$procent))
+				echo $progress
+				echo "# Обработано $counter из $kolfile"
+			done)|zenity --progress --title="Поворот изображений" --auto-close --auto-kill --width=200
+
+		notify-send -t 10000 -i "gtk-ok" "Завершено" "Поворот изображений на $angle градусов"
 fi

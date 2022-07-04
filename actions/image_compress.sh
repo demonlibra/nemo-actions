@@ -22,7 +22,7 @@ if [ $exit_status = 0 ]
 		quality=$( echo $parameters | awk -F ',' '{print $1}')
 		dir=$( echo $parameters | awk -F ',' '{print $3}')
 		sufix=$( echo $parameters | awk -F ',' '{print $4}')
-
+echo "dir=$dir"
 		kolfile=$#														# Количество выделенных файлов
 		procent=$((100/$kolfile))										# Процентов на каждый файл
 
