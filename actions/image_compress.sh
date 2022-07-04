@@ -11,19 +11,20 @@ if [[ -n `echo $path | grep "//"` ]]
 fi
 
 parameters=`yad --borders=20 --width=500 --title="Сжатие изображений" \
-	--text-align=center --item-separator="|" --form \
-	--field="Процент сжатия:SCL"	--field=" :LBL"		--field="Каталог для сохранения:DIR"	--field="Добавить суфикс к имени файла:CHK"\
-				"85"						""						"$path"									"FALSE"			`
+	--text-align=center --item-separator="|" --separator="," --form \
+	--field="Процент сжатия:SCL"	--field=" :LBL"		--field="Каталог для сохранения:DIR"	--field="Добавить суфикс к имени файла:CHK" \
+				"85"						""						"$path"									"FALSE"`
+
 exit_status=$?
 
 if [ $exit_status = 0 ]
 	then
-		quality=$( echo $parameters | awk -F '|' '{print $1}')
-		dir=$( echo $parameters | awk -F '|' '{print $3}')
-		sufix=$( echo $parameters | awk -F '|' '{print $4}')
+		quality=$( echo $parameters | awk -F ',' '{print $1}')
+		dir=$( echo $parameters | awk -F ',' '{print $3}')
+		sufix=$( echo $parameters | awk -F ',' '{print $4}')
 
-		kolfile=$#														#Количество выделенных файлов
-		procent=$((100/$kolfile))										#Процентов на каждый файл
+		kolfile=$#														# Количество выделенных файлов
+		procent=$((100/$kolfile))										# Процентов на каждый файл
 
 		(for file in "$@"
 			do

@@ -4,7 +4,7 @@ path=$1
 path=${path%/*}
 
 parameters=`yad --borders=20 --width=500 --title="Конвертирование изображений" \
-	--text-align=center --item-separator="|" --form \
+	--text-align=center --item-separator="|" --separator="," --form \
 	--field="Формат:CB"				--field="Каталог для сохранения:DIR" \
 	"^jpg|png|bmp|tiff|gif|pdf"					"$path"`
 
