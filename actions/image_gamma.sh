@@ -21,7 +21,7 @@ if [ $exit_status = 0 ]
 		kolfile=$#														# Количество выделенных файлов
 		procent=$((100/$kolfile))										# Процентов на каждый файл
 
-		for file in "$@"
+		(for file in "$@"
 			do
 				filename="${file##*/}"
 				if [ $sufix == TRUE ]
@@ -35,7 +35,7 @@ if [ $exit_status = 0 ]
 				progress=$(($progress+$procent))
 				echo $progress
 				echo "# Обработано $counter из $kolfile"
-			done #)|zenity --progress --title="Изменение гаммы изображений" --auto-close --auto-kill --width=350
+			done)|zenity --progress --title="Изменение гаммы изображений" --auto-close --auto-kill --width=350
 
 		notify-send -t 10000 -i "gtk-ok" "Завершено" "Изменение гаммы изображений"
 fi
