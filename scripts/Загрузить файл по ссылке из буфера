@@ -2,28 +2,30 @@
 
 path_to_save="$1"														# Выбранный каталог для загрузки
 
+user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/73.0.3683.86 Chrome/73.0.3683.86 Safari/537.36"
+
 link=`xclip -sel clip -o`												# Присвоить переменной содержимое буфера обмена
 
-#Получить размер файла
+# Получить размер файла
 size=`HEAD -t 5 $link | grep '^Content-Length:' | sed s/"Content-Length: "//g | perl -pe 's/(?<=\d)(?=(?:\d\d\d)+(?: |_|$))/ /g'`
 
-#Получить имя файла
+# Получить имя файла
 filename=${link##*/}
 
 # Вывод формы
 parameters=`yad --borders=20 --width=800 --title="wget" --text="Скачать файл" \
 	--text-align=center --item-separator="|" --form \
-	--field=" :LBL"	--field="Имя:RO"	--field="Размер:RO"	--field="Ссылка:RO"	--field="Каталог для сохранения:DIR" \
-			""			"$filename"			"$size"				"$link"				"$path_to_save"			`
+	--field=" :LBL"		--field="Ссылка:RO"		--field="Имя:RO"	--field="Размер, байт:RO"	--field="Каталог для сохранения:DIR" \
+			""				"$link"				"$filename"					"$size"						"$path_to_save"			`
 
 exit_status=$?
 
-dir=$( echo $parameters | awk -F '|' '{print $3}')						# Каталог для сохранения файла ($path_to_save)
+dir=$( echo $parameters | awk -F '|' '{print $5}')						# Каталог для сохранения файла ($path_to_save)
 
-		
 if [ "$exit_status" = 0 ]
 	then
-		gnome-terminal --wait --geometry=90x15 --hide-menubar --title "wget $filename" -e "wget --random-wait --user-agent='Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 OPR/39.0.2256.71' -c -P \"$destination\" \"$link\""
+		gnome-terminal --wait --geometry=90x15 --hide-menubar --title "wget $filename" \
+			-e "wget --random-wait --user-agent=\"$user_agent\" -c -P \"$dir\" \"$link\""
 
-		notify-send -i "gtk-ok" "wget" "Завершена загрузка файла:\n\"$link\"\nв каталог \"$destination\""
+		notify-send -i "gtk-ok" "wget" "Завершена загрузка файла:\n\"$link\"\n\nв каталог:\n\"$dir\""
 fi

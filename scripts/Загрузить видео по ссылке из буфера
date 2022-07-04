@@ -47,9 +47,18 @@ if [ "$exit_status" = 0 ]												# Закачка
 				gnome-terminal --wait --title="youtube-dl" --geometry=70x6 --hide-menubar \
 					-e "youtube-dl --console-title --continue --output \"$dir/${file_name1}\" --format $quality $link"
 			else
-				sufix="${start/:/-}_${duration/:/-}"
+				sufix="${start//:/-}_${duration//:/-}"
 				file_name3=`youtube-dl --get-filename "$link"`
-				ffmpeg -y $(youtube-dl -g "$link" | sed "s/.*/-ss $start -i &/") -t $duration -c copy "$dir/${file_name3}_$sufix.mkv"
+				youtube_url=$(youtube-dl -g --format $quality "$link" | sed "s/.*/-ss $start -i &/")
+
+				if [[ `echo $quality | grep "audio"` ]]
+					then
+						gnome-terminal --wait --title="youtube-dl" --geometry=70x6 --hide-menubar \
+							-e "ffmpeg -hide_banner -y $youtube_url -t $duration \"$dir/${file_name3}_$sufix.mp3\""
+					else
+						gnome-terminal --wait --title="youtube-dl" --geometry=70x6 --hide-menubar \
+							-e "ffmpeg -hide_banner -y $youtube_url -t $duration -c copy \"$dir/${file_name3}_$sufix.mkv\""
+				fi
 		fi
 fi
 
