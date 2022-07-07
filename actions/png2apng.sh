@@ -22,7 +22,9 @@ if [ $exit_status = 0 ]
 		path_to_save="$dir/$new_name"
 		pattern=`echo "${name_without_ext}" | sed 's/[0-9]\+$//'`"*.png"
 
-		gnome-terminal --wait --title="youtube-dl" --geometry=90x20 --hide-menubar \
+		gnome-terminal --wait --title="youtube-dl" --geometry=110x20 --hide-menubar \
 			-e "apngasm \"$path_to_save\" \"$pattern\" $delay"
 		#apngasm "$path_to_save" "$pattern" $delay
+		
+		notify-send -t 10000 -i "gtk-ok" "Завершено" "Объединение png в анимированный apng"
 fi
