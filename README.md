@@ -98,6 +98,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**pdf_search_text**|Найти строку в файлах PDF при помощи pdfgrep|
 |**pdf_unite2**|Объединить файлы pdf и изображения в PDF|
 |**pdf_unite**|Объединить (только) файлы PDF|
+|**png2apng**|Объединить файлы png в анимированный apng|
 |**print**|Отправить на принтер по умолчанию документ или изображение |
 |**ps_convert**|Преобразовать postscript в PDF или PNG|
 |**py_run**|Выполнить сценарий python|
