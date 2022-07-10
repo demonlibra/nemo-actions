@@ -13,11 +13,11 @@ exit_status=$?
 if [ $exit_status = 0 ]
 	then
 
-		format=$( echo $parameters | awk -F '|' '{print $1}')
-		dir=$( echo $parameters | awk -F '|' '{print $2}')
+		format=$( echo $parameters | awk -F ',' '{print $1}')
+		dir=$( echo $parameters | awk -F ',' '{print $2}')
 		
-		kolfile=$#					#Количество выделенных файлов
-		procent=$((100/$kolfile))	#Процентов на каждый файл
+		kolfile=$#														# Количество выделенных файлов
+		procent=$((100/$kolfile))										# Процентов на каждый файл
 		
 		(for file in "$@"
 			do
