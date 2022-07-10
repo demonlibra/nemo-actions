@@ -10,7 +10,7 @@ if [ -z "`dpkg -l | grep zenity`" ]
 fi
 
 FORM=`yad --borders=10 --width=300 --title="Обрезать изображения" --text-align=center --form --item-separator="|" --separator="," \
-	 --field="Позиция отсчёта:CB" 												--field="Ширина и высота (WxH)" 	--field="Смещение (+X+Y)"	--field="Расширить, если исходный размер меньше:CHK"	--field="Цвет фона при расширении:CLR"	--field="Перезаписать файл:CHK" \
+	 --field="Позиция отсчёта:CB" 												--field="Ширина и высота (WxH) или (xH) или (Wx)" 	--field="Смещение (+X+Y)"	--field="Расширить, если исходный размер меньше:CHK"	--field="Цвет фона при расширении:CLR"	--field="Перезаписать файл:CHK" \
 	"None|NorthWest|North|NorthEast|West|^Center|East|SouthWest|South|SouthEast"			"800x600"						"+0+0"						FALSE															white								FALSE`
 
 if [ $? = 0 ]
@@ -18,14 +18,8 @@ if [ $? = 0 ]
 		gravity=$( echo $FORM | awk -F ',' '{print $1}')
 		size=$( echo $FORM | awk -F ',' '{print $2}')
 		offset=$( echo $FORM | awk -F ',' '{print $3}')
-		
 		extent=$( echo $FORM | awk -F ',' '{print $4}')
 		color=$( echo $FORM | awk -F ',' '{print $5}')
-		if [ $extent == TRUE ]
-			then extent="-background $color -extent $size"
-			else extent=""
-		fi
-
 		rewrite=$( echo $FORM | awk -F ',' '{print $6}')
 
 		kolfile=$#							# Количество выделенных файлов
@@ -33,6 +27,21 @@ if [ $? = 0 ]
 
 		(for file in "$@"
 			do
+				if [[ `echo ${size:0:1}` == "x" ]] || [[ `echo ${size:0:1}` == "X" ]]
+					then
+						width=`identify -ping -format '%w' $1`
+						size="$width$size"
+				elif [[ `echo ${size: -1}` == "x" ]] || [[ `echo ${size: -1}` == "X" ]]
+					then				
+						height=`identify -ping -format '%h' $1`
+						size="$size$height"
+				fi
+
+				if [ $extent == "TRUE" ]
+					then extent="-background $color -extent $size"
+					else extent=""
+				fi
+
 				if [ "$rewrite" == "TRUE" ]
 					then convert "$file" -gravity $gravity -crop $size$offset $extent "$file"
 					else convert "$file" -gravity $gravity -crop $size$offset $extent "${file%.*}_crop.${file##*.}"
