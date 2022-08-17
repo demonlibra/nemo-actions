@@ -1,13 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
-path_to_save="$1"														# Выбранный каталог для загрузки
+if [ "$1" ]
+	then dir_to_save="$1"																# Выбранный каталог для загрузки
+	else dir_to_save="$PWD"
+fi
 
 user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/73.0.3683.86 Chrome/73.0.3683.86 Safari/537.36"
 
-link=`xclip -sel clip -o`												# Присвоить переменной содержимое буфера обмена
+if [ "$2" ]
+	then link="$2"
+	else link=`xclip -sel clip -o`													# Присвоить переменной содержимое буфера обмена
+fi
 
 # Получить размер файла
-size=`HEAD -t 5 $link | grep '^Content-Length:' | sed s/"Content-Length: "//g | perl -pe 's/(?<=\d)(?=(?:\d\d\d)+(?: |_|$))/ /g'`
+size_byte=`HEAD -t 5 "$link" | grep '^Content-Length:' | sed s/"Content-Length: "//g`
+size=`echo $size_byte | perl -pe 's/(?<=\d)(?=(?:\d\d\d)+(?: |_|$))/ /g'`
 
 # Получить имя файла
 filename=${link##*/}
@@ -15,17 +22,31 @@ filename=${link##*/}
 # Вывод формы
 parameters=`yad --borders=20 --width=800 --title="wget" --text="Скачать файл" \
 	--text-align=center --item-separator="|" --form \
-	--field=" :LBL"		--field="Ссылка:RO"		--field="Имя:RO"	--field="Размер, байт:RO"	--field="Каталог для сохранения:DIR" \
-			""				"$link"				"$filename"					"$size"						"$path_to_save"			`
+	--field=" :LBL"		--field="Ссылка:RO"		--field="Имя:RO"	--field="Размер, байт:RO"	--field="Продолжить загрузку:CHK" --field="Каталог для сохранения:DIR" \
+			""								"$link"				"$filename"					"$size"									"TRUE"							"$dir_to_save" `
 
 exit_status=$?
 
-dir=$( echo $parameters | awk -F '|' '{print $5}')						# Каталог для сохранения файла ($path_to_save)
-
-if [ "$exit_status" = 0 ]
+if [ "$exit_status" == 0 ]
 	then
-		gnome-terminal --wait --geometry=90x15 --hide-menubar --title "wget $filename" \
-			-e "wget --random-wait --user-agent=\"$user_agent\" -c -P \"$dir\" \"$link\""
+		continue=$( echo $parameters | awk -F '|' '{print $5}')				# Продолжить загрузку файла
+		if [ "$continue" == "TRUE" ]
+			then continue="--continue"
+			else continue=""
+		fi
 
-		notify-send -i "gtk-ok" "wget" "Завершена загрузка файла:\n\"$link\"\n\nв каталог:\n\"$dir\""
+		dir=$( echo $parameters | awk -F '|' '{print $6}')						# Каталог для сохранения файла ($path_to_save)
+		path_tmp="${dir}/${filename}.wget-tmp"
+		echo "$link" > "$path_tmp"														# Сохранить ссылку во временный файл
+	
+		gnome-terminal --wait --geometry=90x15 --hide-menubar --title "wget $filename" \
+			-- bash -c "wget --random-wait --user-agent=\"$user_agent\" $continue -P \"$dir\" \"$link\""
+
+		if [[ `stat -c %s "$filename"` == $size_byte ]]
+			then
+				rm --force "$path_tmp"
+				notify-send -i "gtk-ok" "wget" "Завершена загрузка файла:\n\"$link\"\n\nв каталог:\n\"$dir\""
+			else
+				notify-send -i "error" "wget" "Загрузка файла $filename не завершена"
+		fi
 fi

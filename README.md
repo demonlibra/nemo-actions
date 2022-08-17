@@ -118,6 +118,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |**video_process**|Изменить формат, bitrate, разрешение, кодек, поворот|
 |**video_storyboard**|Раскадровка видео|
 |**wetransfer**|Загрузить на Wetransfer|
+|**wget**|Продолжить загрузку файла по ссылке из временного файла *.wget-tmp|
 ## Сценарии (scripts)
 
 /home/имя_пользователя/.local/share/nemo/scripts
