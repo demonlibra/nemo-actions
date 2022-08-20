@@ -42,7 +42,8 @@ if [ "$exit_status" == 0 ]
 		gnome-terminal --wait --geometry=90x15 --hide-menubar --title "wget $filename" \
 			-- bash -c "wget --random-wait --user-agent=\"$user_agent\" $continue -P \"$dir\" \"$link\""
 
-		if [[ `stat -c %s "$filename"` == $size_byte ]]
+		size_received=`stat -c %s "${dir}/${filename}"`
+		if [ $size_received == $size_byte ]
 			then
 				rm --force "$path_tmp"
 				notify-send -i "gtk-ok" "wget" "Завершена загрузка файла:\n\"$link\"\n\nв каталог:\n\"$dir\""
