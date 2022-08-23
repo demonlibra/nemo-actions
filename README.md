@@ -62,6 +62,7 @@ chmod +x $HOME/.local/share/nemo/scripts/*
 |---|---|
 |**apng2gif**|Конвертировать анимацию apng в gif|
 |**appimage_run**|Скопировать в домашний каталог, сделать исполняемым и запустить пакет AppImage|
+|**appimage_update**|Обновить пакет AppImage|
 |**bin_run**|Сделать исполняемым и запустить бинарный файл|
 |**clamav**|Проверить на вирусы программой clamav|
 |**deb_install**|Установить пакет deb в терминале утилитой dpkg|
