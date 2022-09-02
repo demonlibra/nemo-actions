@@ -39,8 +39,8 @@ if [ "$exit_status" == 0 ]
 		path_tmp="${dir}/${filename}.wget-tmp"
 		echo "$link" > "$path_tmp"														# Сохранить ссылку во временный файл
 	
-		gnome-terminal --wait --geometry=90x15 --hide-menubar --title "wget $filename" \
-			-- bash -c "wget --random-wait --user-agent=\"$user_agent\" $continue -P \"$dir\" \"$link\""
+		gnome-terminal --wait --geometry=90x5 --hide-menubar --title "wget $filename" \
+			-- bash -c "wget --no-verbose --show-progress --random-wait --user-agent=\"$user_agent\" $continue -P \"$dir\" \"$link\""
 
 		size_received=`stat -c %s "${dir}/${filename}"`
 		if [ $size_received == $size_byte ]

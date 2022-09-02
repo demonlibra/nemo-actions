@@ -11,7 +11,9 @@ scale=`echo "scale=2;$width/$height" |bc`
 
 #AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," --field=:LBL --field="Формат:CB" --field="Bitrate (kbit)" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" "" "оригинал|^mkv|mov|mp4|avi" "2000" "" "^оригинал|^h264|hevc|mpeg4|mpeg2video" "оригинал|^mp3|aac" FALSE FALSE`
 
-AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," --field=:LBL --field="Формат:CB" --field="Bitrate (kbit):NUM" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Обрезать W:H:X:Y (Ширина : Высота : X левого угла : Y левого угла):" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Поворот:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" --field="Количество кадров" "" "оригинал|^mkv|mov|mp4|avi|gif" "4000|0..10000|500" "" "" "^оригинал|^h264|hevc|mpeg4|mpeg2video" "оригинал|^mp3|aac" "^Нет|По часовой|Против часовой" FALSE FALSE`
+AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," \
+--field=:LBL --field="Формат:CB" 		--field="Bitrate (kbit):NUM" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Обрезать W:H:X:Y (Ширина : Высота : X левого угла : Y левого угла):" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Поворот:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" --field="Количество кадров" \
+"" 	"оригинал|^mkv|mov|mp4|avi|gif" 			"4000|0..10000|500" 							"" 																						"" 																			"^оригинал|^h264 MPEG-4/AVC|hevc H.265|vp8|vp9|av1|vvc H.266|mpeg2video" "оригинал|^mp3|aac" "^Нет|По часовой|Против часовой" 	FALSE 								FALSE`
 
 if [ $? = 0 ]
 	then
@@ -36,7 +38,7 @@ if [ $? = 0 ]
 
 		videocodec=$( echo $AAA | awk -F ',' '{print $6}')
 		if [[ "$videocodec" != "оригинал" ]] && [[ "$format" != "gif" ]]
-			then optionvideocodec="-vcodec $videocodec"
+			then optionvideocodec="-vcodec ${videocodec%% *}"
 		fi
 
 		audiocodec=$( echo $AAA | awk -F ',' '{print $7}')
