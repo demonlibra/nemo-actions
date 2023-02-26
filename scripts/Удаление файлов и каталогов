@@ -1,0 +1,52 @@
+#!/bin/bash
+
+FORM=`yad --borders=10 --title="Удаление файлов и каталогов" --text-align=center \
+		--form --separator="," --item-separator="|" \
+		--field="Обычное удаление:CHK" --field="От имени root:CHK" --field=" :LBL" \
+		--field=secure-delete:LBL --field=:LBL --field="Быстро (no /dev/urandom, no synchronize mode):CHK" --field="Меньше проходов (2 прохода 0xff/random):CHK" --field="Ещё меньше проходов (1 проход random):CHK"  \
+		FALSE FALSE "" \
+		"" "" TRUE TRUE FALSE`
+
+if [ $? = 0 ]
+	then
+		simple=$( echo $FORM | awk -F ',' '{print $1}')
+		root=$( echo $FORM | awk -F ',' '{print $2}')
+		
+		fast=$( echo $FORM | awk -F ',' '{print $6}')
+		if [ $fast = "TRUE" ]
+			then options="f"
+		fi
+
+		lessens=$( echo $FORM | awk -F ',' '{print $7}')
+
+		if [ $lessens = "TRUE" ]
+			then options=$options"l"
+		fi
+
+		lessens=$( echo $FORM | awk -F ',' '{print $8}')
+		if [ $lessens = "TRUE" ]
+			then options=$options"l"
+		fi
+
+		if [[ $simple == FALSE ]] && [[ -z "`dpkg -l | grep secure-delete`" ]]
+			then
+				notify-send -t 10000 -i "error" "Ошибка" "Secure delete не установлен"
+				exit 1
+			fi
+
+		quoted_args="$(printf " %q" "${@}")"
+		echo "root = $root"
+		echo "simple = $simple"
+		
+		if [[ $simple = TRUE ]] && [[ $root = TRUE ]]
+			then x-terminal-emulator --geometry 90x20 --hide-menubar -t "Удаление" -e bash -c "sudo rm --force --recursive $quoted_args; echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
+		elif [[ $simple == TRUE ]] && [[ $root == FALSE ]]
+			then x-terminal-emulator --geometry 90x20 --hide-menubar -t "Удаление" -e bash -c "rm --force --recursive $quoted_args;      echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
+		elif [[ $simple == FALSE ]] && [[ $root == TRUE ]]
+			then x-terminal-emulator --geometry 90x20 --hide-menubar -t "Secure delete" -e bash -c "sudo srm -rv$options $quoted_args;        echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
+		elif [[ $simple == FALSE ]] && [[ $root == FALSE ]]
+			then x-terminal-emulator --geometry 90x20 --hide-menubar -t "Secure delete" -e bash -c "srm -rv$options $quoted_args;             echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
+		fi
+
+		notify-send -t 10000 -i "gtk-ok" "Secure delete" "Операция завершена"
+fi

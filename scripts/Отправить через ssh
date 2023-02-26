@@ -2,12 +2,14 @@
 
 list="$(printf " %q" "${@}")"
 
-FORM=`yad --borders=10 --width=300 --title="Отправить через ssh" --text-align=center --text="Укажите параметры" --form --item-separator="|" --separator="," --field=:LBL --field="Имя:CBE" --field="IP адрес:CBE" --field="Каталог:CBE" "" "pi" "192.168.3.40" "|uni|pp"`
+FORM=`yad --borders=10 --width=300 --title="Отправить через ssh" --text-align=center --text="Укажите параметры" --form --item-separator="|" --separator="," \
+--field=:LBL	--field="Имя пользователя:CBE"			--field="IP адрес хоста:CBE" 			--field="Каталог:CBE" \
+		"" 						"ubuntu|pi" 					"192.168.0.222|192.168.3.40" 					"|uni|pp"`
 
 if [ $? = 0 ]
 	then
 		name=$( echo $FORM | awk -F ',' '{print $2}')
 		ip_address=$( echo $FORM | awk -F ',' '{print $3}')
 		folder=$( echo $FORM | awk -F ',' '{print $4}')
-		x-terminal-emulator --hide-menubar -t "ssh" --geometry 110x30 -e bash -c "scp -r $list $name@$ip_address:$folder"
+		gnome-terminal --hide-menubar --title="ssh" --geometry 110x30 -- bash -c "scp -r $list $name@$ip_address:$folder"
 fi

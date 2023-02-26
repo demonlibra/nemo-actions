@@ -40,16 +40,17 @@ duration=$( echo $parameters | awk -F '|' '{print $9}')						# Длительн�
 
 if [ "$exit_status" = 0 ]																# Закачка
    then
-		if [ $thumbnail = TRUE ]														# Скачать только обложку
+		if [ $thumbnail == TRUE ]														# Скачать только обложку
 			then
 				gnome-terminal --wait --title="youtube-dl" --geometry=80x10 --hide-menubar --working-directory="$dir" -- bash -c \
 					"youtube-dl --console-title --write-thumbnail --skip-download --output \"${file_name1}\" $link; echo ; echo ------------------ ; echo \"Завершено\"; echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
 				
-		elif [ -z $start ]
+		elif [ -z $start ]																# Обычное скачивание
 			then
 				gnome-terminal --wait --title="youtube-dl" --geometry=80x10 --hide-menubar --working-directory="$dir" -- bash -c \
-					"youtube-dl --console-title --continue --output \"${file_name1}\" --format $quality $link; echo; echo ------------------ ; echo \"Завершено\"; echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
-			else
+					"youtube-dl --console-title --continue --output \"${file_name1}\" --format $quality $link; notify-send -t 10000 -i \"gtk-ok\" \"youtube-dl\" \"Загрузка завершена\"; echo; echo ------------------ ; echo \"Завершено\"; echo; read -p \"Нажмите ENTER чтобы закрыть окно\""
+			
+			else																				# Скачивание части
 				sufix="${start//:/-}_${duration//:/-}"
 				file_name3=`youtube-dl --get-filename "$link"`
 				youtube_url=$(youtube-dl -g --format $quality "$link" | sed "s/.*/-ss $start -i &/")

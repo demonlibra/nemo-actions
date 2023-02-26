@@ -2,7 +2,7 @@
 
 #quoted_args="$(printf " %q" "${@}")"
 
-FORM=`yad --borders=20 --title="Временная метка" --text="Параметры" --text-align=center --form --separator="," --item-separator="|" \
+FORM=`yad --borders=20 --title="Временная метка" --text-align=center --form --separator="," --item-separator="|" \
 	--field=:LBL --field="Оставить оригинальный файл:CHK" \
 			"" 					TRUE`
 
