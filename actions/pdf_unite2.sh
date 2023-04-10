@@ -29,7 +29,7 @@ for file in "$@"
 		#Проверяем присутствуют ли зашифрованные pdf
 		if [ ${file##*.} = "pdf" ] || [ ${file##*.} = "PDF" ]
 			then
-				if [[ `pqdf --show-encryptin $file` != "File is not encrypted" ]]
+				if [[ `qpdf --show-encryption $file` != "File is not encrypted" ]]
 					then
 						encrypted="TRUE"
 						use_temp_path="TRUE"
