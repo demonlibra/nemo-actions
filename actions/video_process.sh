@@ -12,8 +12,8 @@ scale=`echo "scale=2;$width/$height" |bc`
 #AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," --field=:LBL --field="Формат:CB" --field="Bitrate (kbit)" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" "" "оригинал|^mkv|mov|mp4|avi" "2000" "" "^оригинал|^h264|hevc|mpeg4|mpeg2video" "оригинал|^mp3|aac" FALSE FALSE`
 
 AAA=`yad --borders=10 --width=600 --title="Обработка видео" --text="Текущее разрешение файла $name: $wh, соотношение сторон: $scale" --form --item-separator="|" --separator="," \
---field=:LBL --field="Формат:CB" 		--field="Bitrate (kbit):NUM" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Обрезать W:H:X:Y (Ширина : Высота : X левого угла : Y левого угла):" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Поворот:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" --field="Количество кадров" \
-"" 	"оригинал|^mkv|mov|mp4|avi|gif" 			"4000|0..10000|500" 							"" 																						"" 																			"^оригинал|^h264 MPEG-4/AVC|hevc H.265|vp8|vp9|av1|vvc H.266|mpeg2video" "оригинал|^mp3|aac" "^Нет|По часовой|Против часовой" 	FALSE 								FALSE`
+--field=:LBL --field="Формат:CB" 		--field="Bitrate (kbit):NUM" --field="Разрешение (пример 800x452, только четное, по умолчанию оригинал)" --field="Обрезать W:H:X:Y (Ширина : Высота : X левого угла : Y левого угла):" --field="Кодек видео:CB" --field="Кодек аудио:CB" --field="Поворот:CB" --field="Тест (5 сек с 5-й сек):CHK" --field="Без звука:CHK" --field="Количество кадров" --field="Задействовать ядер процессора (0 - автовыбор):NUM" \
+		"" 	"оригинал|^mkv|mov|mp4|avi|gif" 	"4000|0..10000|500" 							"" 																						"" 							"^оригинал|^h264 MPEG-4/AVC|hevc H.265|vp8|vp9|av1|vvc H.266|mpeg2video" "оригинал|^mp3|aac" "^Нет|По часовой|Против часовой" 	FALSE 										FALSE								""								"0|0..12|1"`
 
 if [ $? = 0 ]
 	then
@@ -74,8 +74,14 @@ if [ $? = 0 ]
 		frame_rate=$( echo $AAA | awk -F ',' '{print $11}')
 		if [ "$frame_rate" != "" ]
 			then
-					option_frame_rate="-r "$frame_rate
-					prefix="_"$frame_rate"fps"
+				option_frame_rate="-r "$frame_rate
+				prefix="_"$frame_rate"fps"
+		fi
+		
+		threads=$( echo $AAA | awk -F ',' '{print $12}')
+		if [ $threads != 0 ]
+			then
+				optionthreads="-threads "$threads
 		fi
 		
 		for file in "$@"
@@ -103,7 +109,7 @@ if [ $? = 0 ]
 					else duration=$durationS" сек"
 				fi
 						
-				gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Обработка файла $counter из $kolfile - ${file##*/} длительностью $duration" -e "ffmpeg -hide_banner -i \"$file\" $cropprefix -y -b:v \"$bitrate\"k $option_rotate $optionvideocodec $optionsize $optionaudiocodec $option_frame_rate $testcode -strict -2 \"${file%.*}\"$sizeprefix\"_$bitrate\"k\"$prefix.$ext\""
+				gnome-terminal --wait --geometry 100x20 --hide-menubar -t "Обработка файла $counter из $kolfile - ${file##*/} длительностью $duration" -e "ffmpeg -hide_banner $optionthreads -i \"$file\" $optionthreads $cropprefix -y -b:v \"$bitrate\"k $option_rotate $optionvideocodec $optionsize $optionaudiocodec $option_frame_rate $testcode -strict -2 \"${file%.*}\"$sizeprefix\"_$bitrate\"k\"$prefix.$ext\""
 			done
 
 			notify-send -t 10000 -i "gtk-ok" "Завершено" "Обработка видео $codec $bitrate kbit"
